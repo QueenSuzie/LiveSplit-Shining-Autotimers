@@ -1,0 +1,59 @@
+state("sonic2app")
+{
+    bool runStart : 0x134AFFA;
+    bool controlActive : 0x134AFFE;
+    bool timerEnd : 0x134AFDA;
+    bool levelEnd : 0x134B002;
+ 
+    byte minutes : 0x133B584;
+    byte seconds : 0x133B5C4;
+    byte centiseconds : 0x133B604;
+    byte map : 0x1534B70;
+}
+ 
+init
+{
+	vars.timeBuffer = 0;
+    vars.prevPhase = timer.CurrentPhase;
+}
+
+update
+{
+    if (timer.CurrentPhase == TimerPhase.Running && vars.prevPhase == TimerPhase.NotRunning)
+    {
+        vars.timeBuffer = (-current.minutes*60000) + (-current.seconds*1000) + (-current.centiseconds*10);
+    }
+    vars.prevPhase = timer.CurrentPhase;
+}
+
+start
+{
+    return current.runStart && !old.runStart;
+}
+ 
+split
+{
+    if ((current.map == 19 || current.map == 20 || current.map == 29 || current.map == 33 || current.map == 42 || current.map == 70) && current.controlActive)
+    {
+        return current.timerEnd && !old.timerEnd;
+    }
+    return current.levelEnd && !old.levelEnd;
+}
+ 
+isLoading
+{
+	return true;
+}
+ 
+gameTime
+{
+	int inGameTime = (current.minutes*60000) + (current.seconds*1000) + (current.centiseconds*10);
+    int oldGameTime = (old.minutes*60000) + (old.seconds*1000) + (old.centiseconds*10);
+	
+    if (inGameTime == 0 && oldGameTime > 100)
+    {
+        vars.timeBuffer += oldGameTime - inGameTime;
+    }
+	
+	return TimeSpan.FromMilliseconds(inGameTime + vars.timeBuffer);
+}
