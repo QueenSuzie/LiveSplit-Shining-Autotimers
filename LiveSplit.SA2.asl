@@ -2,6 +2,7 @@ state("sonic2app")
 {
     bool runStart : 0x134AFFA;
     bool controlActive : 0x134AFFE;
+	bool menuActive : 0x13483FC;
     bool timerEnd : 0x134AFDA;
     bool levelEnd : 0x134B002;
  
@@ -50,10 +51,14 @@ gameTime
 	int inGameTime = (current.minutes*60000) + (current.seconds*1000) + (current.centiseconds*10);
     int oldGameTime = (old.minutes*60000) + (old.seconds*1000) + (old.centiseconds*10);
 	
-    if (inGameTime == 0 && oldGameTime > 100)
+    if (oldGameTime > inGameTime)
     {
         vars.timeBuffer += oldGameTime - inGameTime;
     }
+	if (oldGameTime == 0 && inGameTime > 100)
+	{
+		vars.timeBuffer -= inGameTime;
+	}
 	
 	return TimeSpan.FromMilliseconds(inGameTime + vars.timeBuffer);
 }
