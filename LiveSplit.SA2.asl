@@ -24,7 +24,7 @@ update
 {
     if (timer.CurrentPhase == TimerPhase.Running && vars.prevPhase == TimerPhase.NotRunning)
     {
-        vars.timeBuffer = (-current.minutes*60000) - (current.seconds*1000) - ((int)Math.Ceiling(current.centiseconds*(5.0/3.0))*10);
+        vars.timeBuffer = (-old.minutes*60000) - (old.seconds*1000) - ((int)Math.Ceiling(old.centiseconds*(5.0/3.0))*10);
     }
     vars.prevPhase = timer.CurrentPhase;
 }
