@@ -55,11 +55,11 @@ gameTime
     if (oldGameTime > inGameTime + 1000)
     {
         vars.timeBuffer += oldGameTime - inGameTime;
-	}
-	if (oldGameTime == 0 && inGameTime > 100)
-	{
-		vars.timeBuffer -= inGameTime;
-	}
+    }
+    if (oldGameTime == 0 && inGameTime > 100)
+    {
+        vars.timeBuffer -= inGameTime;
+    }
 	
 	//Work On Timer Resetting If Less Than 1 second IGT
 	
