@@ -2,7 +2,6 @@ state("sonic2app")
 {
     bool runStart : 0x134AFFA;
     bool controlActive : 0x134AFFE;
-    bool menuActive : 0x13483FC;
     bool timerEnd : 0x134AFDA;
     bool levelEnd : 0x134B002;
  
@@ -10,7 +9,9 @@ state("sonic2app")
     byte seconds : 0x134AFDC;
     byte centiseconds : 0x134AFDD;
 	
+    byte menuMode : 0x1534BE0;
     byte map : 0x1534B70;
+	
 }
  
 init
@@ -52,7 +53,7 @@ gameTime
     int inGameTime = (current.minutes*60000) + (current.seconds*1000) + ((int)Math.Ceiling(current.centiseconds*(5.0/3.0))*10);
     int oldGameTime = (old.minutes*60000) + (old.seconds*1000) + ((int)Math.Ceiling(old.centiseconds*(5.0/3.0))*10);
 	
-    if (oldGameTime > inGameTime)
+    if (oldGameTime > inGameTime + 1000)
     {
         vars.timeBuffer += oldGameTime - inGameTime;
     }
