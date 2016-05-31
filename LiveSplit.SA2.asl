@@ -9,7 +9,6 @@ state("sonic2app")
     byte seconds : 0x134AFDC;
     byte centiseconds : 0x134AFDD;
 	
-    byte menuMode : 0x1534BE0;
     byte map : 0x1534B70;
 	
 }
@@ -24,7 +23,7 @@ update
 {
     if (timer.CurrentPhase == TimerPhase.Running && vars.prevPhase == TimerPhase.NotRunning)
     {
-        vars.timeBuffer = (-old.minutes*60000) - (old.seconds*1000) - ((int)Math.Ceiling(old.centiseconds*(5.0/3.0))*10);
+        vars.timeBuffer = (-current.minutes*60000) - (current.seconds*1000) - ((int)Math.Ceiling(current.centiseconds*(5.0/3.0))*10);
     }
     vars.prevPhase = timer.CurrentPhase;
 }
@@ -53,18 +52,16 @@ gameTime
     int inGameTime = (current.minutes*60000) + (current.seconds*1000) + ((int)Math.Ceiling(current.centiseconds*(5.0/3.0))*10);
     int oldGameTime = (old.minutes*60000) + (old.seconds*1000) + ((int)Math.Ceiling(old.centiseconds*(5.0/3.0))*10);
 	
-    if ((oldGameTime > inGameTime + 1000) && current.menuMode == 16)
+    if (oldGameTime > inGameTime + 1000)
     {
         vars.timeBuffer += oldGameTime - inGameTime;
-    }
-	if ((oldGameTime > inGameTime) && current.menuMode != 16)
-    {
-        vars.timeBuffer += oldGameTime - inGameTime;
-    }
+	}
 	if (oldGameTime == 0 && inGameTime > 100)
- 	{
-		current.timeBuffer -= inGameTime;
- 	}
-
+	{
+		vars.timeBuffer -= inGameTime;
+	}
+	
+	//Work On Timer Resetting If Less Than 1 second IGT
+	
     return TimeSpan.FromMilliseconds(inGameTime + vars.timeBuffer);
 }
