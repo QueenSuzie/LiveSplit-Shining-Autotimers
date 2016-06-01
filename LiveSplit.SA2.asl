@@ -9,8 +9,8 @@ state("sonic2app")
     byte seconds : 0x134AFDC;
     byte centiseconds : 0x134AFDD;
 	
+    byte menuMode : 0x1534BE0;
     byte map : 0x1534B70;
-	
 }
  
 init
@@ -52,7 +52,11 @@ gameTime
     int inGameTime = (current.minutes*60000) + (current.seconds*1000) + ((int)Math.Ceiling(current.centiseconds*(5.0/3.0))*10);
     int oldGameTime = (old.minutes*60000) + (old.seconds*1000) + ((int)Math.Ceiling(old.centiseconds*(5.0/3.0))*10);
 	
-    if (oldGameTime > inGameTime + 1000)
+    if ((oldGameTime > inGameTime) && current.menuMode != 16)
+    {
+        vars.timeBuffer += oldGameTime - inGameTime;
+    }
+    else if (oldGameTime > inGameTime + 1000)
     {
         vars.timeBuffer += oldGameTime - inGameTime;
     }
@@ -60,8 +64,6 @@ gameTime
     {
         vars.timeBuffer -= inGameTime;
     }
-	
-	//Work On Timer Resetting If Less Than 1 second IGT
 	
     return TimeSpan.FromMilliseconds(inGameTime + vars.timeBuffer);
 }
