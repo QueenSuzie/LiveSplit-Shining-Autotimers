@@ -52,11 +52,15 @@ gameTime
     int inGameTime = (current.minutes*60000) + (current.seconds*1000) + ((int)Math.Ceiling(current.centiseconds*(5.0/3.0))*10);
     int oldGameTime = (old.minutes*60000) + (old.seconds*1000) + ((int)Math.Ceiling(old.centiseconds*(5.0/3.0))*10);
 	
-    if ((oldGameTime > inGameTime) && current.menuMode != 16)
+    if ((oldGameTime > inGameTime) && !current.controlActive)
     {
         vars.timeBuffer += oldGameTime - inGameTime;
     }
-    if (oldGameTime == 0 && inGameTime > 100)
+	else if (oldGameTime > inGameTime + 1000)
+    {
+        vars.timeBuffer += oldGameTime - inGameTime;
+    }
+    if (oldGameTime == 0 && inGameTime > 1000)
     {
         vars.timeBuffer -= inGameTime;
     }
