@@ -56,11 +56,7 @@ gameTime
     {
         vars.timeBuffer += oldGameTime - inGameTime;
     }
-	else if (oldGameTime > inGameTime + 1000)
-    {
-        vars.timeBuffer += oldGameTime - inGameTime;
-    }
-    if (oldGameTime == 0 && inGameTime > 1000)
+    if ((oldGameTime == 0 && inGameTime > 1000)) && !current.controlActive)
     {
         vars.timeBuffer -= inGameTime;
     }
