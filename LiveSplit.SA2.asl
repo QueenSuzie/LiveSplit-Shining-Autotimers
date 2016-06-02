@@ -56,10 +56,6 @@ gameTime
     {
         vars.timeBuffer += oldGameTime - inGameTime;
     }
-    else if (oldGameTime > inGameTime + 1000)
-    {
-        vars.timeBuffer += oldGameTime - inGameTime;
-    }
     if (oldGameTime == 0 && inGameTime > 100)
     {
         vars.timeBuffer -= inGameTime;
