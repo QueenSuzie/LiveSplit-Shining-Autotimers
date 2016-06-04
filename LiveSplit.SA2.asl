@@ -8,23 +8,15 @@ state("sonic2app")
     byte minutes : 0x134AFDB;
     byte seconds : 0x134AFDC;
     byte centiseconds : 0x134AFDD;
-	
     byte menuMode : 0x1534BE0;
     byte map : 0x1534B70;
+	
+    float bossHealth : 0x019e9604, 0x48;
 }
  
 init
 {
     vars.timeBuffer = 0;
-    vars.prevPhase = timer.CurrentPhase;
-}
-
-update
-{
-    if (timer.CurrentPhase == TimerPhase.Running && vars.prevPhase == TimerPhase.NotRunning)
-    {
-        vars.timeBuffer = (-current.minutes*60000) - (current.seconds*1000) - ((int)Math.Ceiling(current.centiseconds*(5.0/3.0))*10);
-    }
     vars.prevPhase = timer.CurrentPhase;
 }
 
@@ -35,7 +27,7 @@ start
  
 split
 {
-    if ((current.map == 19 || current.map == 20 || current.map == 29 || current.map == 33 || current.map == 42 || current.map == 70) && current.controlActive)
+    if ((current.map == 19 || current.map == 20 || current.map == 29 || current.map == 33 || current.map == 42 || current.map == 70) && current.bossHealth == 0)
     {
         return current.timerEnd && !old.timerEnd;
     }
