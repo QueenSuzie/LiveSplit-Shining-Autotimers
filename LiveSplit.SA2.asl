@@ -8,7 +8,6 @@ state("sonic2app")
     byte minutes : 0x134AFDB;
     byte seconds : 0x134AFDC;
     byte centiseconds : 0x134AFDD;
-    byte menuMode : 0x1534BE0;
     byte map : 0x1534B70;
 	
     float bossHealth : 0x019e9604, 0x48;
