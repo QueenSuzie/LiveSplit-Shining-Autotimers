@@ -1,5 +1,4 @@
-//Now counts frames in Cannons Core when time is stopped
-//Made with help from turtlechuck
+//Now counts frames in Cannons Core when time is stopped. (Made by Jellyfishswimmer aka. TurtleChuck)
 
 state("sonic2app")
 {
