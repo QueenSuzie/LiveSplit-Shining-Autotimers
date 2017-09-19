@@ -1,5 +1,5 @@
-//Original code for IGT and autosplitting made by Shining_Face
-//Now also counts frames in Cannons Core when time is stopped. (Made by Jellyfishswimmer aka. TurtleChuck)
+//Autosplitter that counts frames in cannons core when time is stopped
+//This is the second version
 
 state("sonic2app")
 {
@@ -105,11 +105,5 @@ gameTime
 		vars.timeBuffer = vars.timeBuffer.Subtract(TimeSpan.FromTicks(inGameTime));
     }
 	
-	//Make the IGT centiseconds never end in a 1, 3, 6, or 8 (round up)
-	long roundedTicks = ((long)(((inGameTime + vars.timeBuffer.Ticks)/100000.0)))*100000L;
-	int lastDigit = (int)((long)((roundedTicks/100000.0)) % 10);
-	bool addOne = (lastDigit % 2 == 1 && lastDigit < 5 ||
-				   lastDigit % 2 == 0 && lastDigit > 5);
-				   
-    return TimeSpan.FromTicks(roundedTicks+(addOne ? 100000 : 0));
+    return TimeSpan.FromTicks(inGameTime + vars.timeBuffer.Ticks);
 }
