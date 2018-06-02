@@ -1,109 +1,156 @@
 //Autosplitter that counts frames in cannons core when time is stopped
-//This is the second version
+//This is version 8
+//Original by ShiningFace, edit by turtlechuck
 
 state("sonic2app")
 {
-    bool runStart : 0x134AFFA;
-    bool controlActive : 0x134AFFE;
-    bool timerEnd : 0x134AFDA;
-    bool levelEnd : 0x134B002;
- 
-	int frameCount : 0x0134B038;
-	byte timestop : 0x134aff7;
-	byte menuMode : 0x01534BE0;
-	
-    byte minutes : 0x134AFDB;
-    byte seconds : 0x134AFDC;
-    byte centiseconds : 0x134AFDD;
-    byte map : 0x1534B70;
-	
-    float bossHealth : 0x019e9604, 0x48;
+	bool runStart       : 0x0134AFFA;
+	bool controlActive  : 0x0134AFFE;
+	bool timerEnd       : 0x0134AFDA;
+	bool levelEnd       : 0x0134B002;
+
+	int frameCount      : 0x0134B038;
+	byte timestop       : 0x0134AFF7;
+	byte menuMode       : 0x01534BE0;
+
+	byte stageID        : 0x01534B70;
+
+	//Get minutes, seconds, and centiseconds all in one read
+	int levelTimer      : 0x015457F8;  //0x019457F8
+	int levelTimerClone : 0x0134AFDB;  //0x0174AFDB
+
+	float bossHealth    : 0x019E9604, 0x48;
 }
- 
+
 init
 {
-    vars.timeBuffer = new TimeSpan(0); //now in units of 0.0001 milliseconds (0.1 microseconds) (100 nanoseconds)
-    vars.prevPhase = timer.CurrentPhase;
+	vars.totalTime = 0;      //Time accumulated from level timer, in centiseconds
+	vars.timestopFrames = 0; //How many additional frames we added due to timestop
 	vars.countFrames = false;
+	vars.lastGoodTimerVal = current.levelTimerClone;
+	vars.splitDelay = 0;
+	refreshRate = 60;
 }
 
 update
 {
-    if(timer.CurrentPhase == TimerPhase.Running && vars.prevPhase == TimerPhase.NotRunning)
-    {
-        vars.timeBuffer = new TimeSpan((-current.minutes*600000000L) - (current.seconds*10000000L) - ((int)Math.Ceiling(current.centiseconds*(5.0/3.0))*100000L));
-    }
-    vars.prevPhase = timer.CurrentPhase;
+	vars.splitDelay = Math.Max(0, vars.splitDelay-1);
 	
-	if(current.map == 34 || current.map == 35 || current.map == 36 || current.map == 37 || current.map == 38) //Cannons Core
-    {
-		if(current.timestop == 2) //Count time by frames on timestop
+	if (current.stageID == 34 ||
+		current.stageID == 35 ||
+		current.stageID == 36 ||
+		current.stageID == 37 ||
+		current.stageID == 38) //Cannons Core
+	{
+		if (current.timestop == 2) //Count time by frames on timestop
 		{
 			vars.countFrames = true;
 		}
-		else 
+		else
+		{
+			vars.countFrames = false; //Not timestop? - don't count frames
+		}
+
+		if (current.menuMode == 17) //Don't count frames when pause menu open
 		{
 			vars.countFrames = false;
 		}
-		
-		if(current.menuMode == 17) //Pause timer when pause menu open
+
+		if (current.timerEnd) //Pause timer when dying/restarting/finishing level while timestop is active
 		{
 			vars.countFrames = false;
 		}
-		
-		if(current.timerEnd) //Pause timer when dying/restarting/finishing level while timestop is active
-		{
-			vars.countFrames = false;
-		}
-    }
-	else 
+	}
+	else
 	{
 		//Don't count time by frames anywhere else but cannons core
 		vars.countFrames = false;
+	}
+
+	//Ensure we have accurate readings of the igt
+	if ((current.levelTimer & 0xFFFFFF) == (current.levelTimerClone & 0xFFFFFF))
+	{
+		int currMinutes =    (current.levelTimer >> 0)  & 0xFF;
+		int currSeconds =    (current.levelTimer >> 8)  & 0xFF;
+		int currCentis  =    (current.levelTimer >> 16) & 0xFF;
+
+		int oldMinutes  = (vars.lastGoodTimerVal >> 0)  & 0xFF;
+		int oldSeconds  = (vars.lastGoodTimerVal >> 8)  & 0xFF;
+		int oldCentis   = (vars.lastGoodTimerVal >> 16) & 0xFF;
+
+		currCentis = (int)Math.Ceiling(currCentis*(5.0/3.0));
+		oldCentis  =  (int)Math.Ceiling(oldCentis*(5.0/3.0));
+
+		//In game timer converted to centiseconds
+		int inGameTime  = (currMinutes*6000) + (currSeconds*100) + (currCentis);
+		int oldGameTime =  (oldMinutes*6000) +  (oldSeconds*100) +  (oldCentis);
+
+		//Only add positive time
+		int timeToAdd = Math.Max(0, inGameTime-oldGameTime);
+
+		//Dont add time when the timer goes beserk in loading screens
+		if (current.controlActive)
+		{
+			vars.totalTime += timeToAdd;
+		}
+
+		vars.lastGoodTimerVal = current.levelTimer;
+	}
+
+	if (vars.countFrames)
+	{
+		int diff = current.frameCount - old.frameCount;
+		vars.timestopFrames = vars.timestopFrames+diff;
+	}
+	
+	//Boss stages
+	if ((current.stageID == 19 ||
+		 current.stageID == 20 ||
+		 current.stageID == 29 ||
+		 current.stageID == 33 ||
+		 current.stageID == 42) && current.bossHealth == 0)
+	{
+		if (current.timerEnd && !old.timerEnd)
+		{
+			vars.splitDelay = 3;
+		}
+	}
+	else if (current.stageID == 70) //Route 101/280
+	{
+		if (current.timerEnd && !old.timerEnd)
+		{
+			vars.splitDelay = 3;
+		}
+	}
+	else if (current.levelEnd && !old.levelEnd) //Normal stages
+	{
+		vars.splitDelay = 3;
 	}
 }
 
 start
 {
-    return current.runStart && !old.runStart;
+	vars.totalTime = 0;
+	vars.timestopFrames = 0;
+	vars.countFrames = false;
+	vars.splitDelay = 0;
+	
+	vars.lastGoodTimerVal = current.levelTimerClone;
+
+	return current.runStart && !old.runStart;
 }
- 
+
 split
 {
-    if((current.map == 19 || current.map == 20 || current.map == 29 || current.map == 33 || current.map == 42) && current.bossHealth == 0)
-    {
-        return current.timerEnd && !old.timerEnd;
-    }
-	if(current.map == 70)
-    {
-        return current.timerEnd && !old.timerEnd;
-    }
-    return current.levelEnd && !old.levelEnd;
+	return (vars.splitDelay == 1);
 }
- 
+
 isLoading
 {
-    return true;
+	return true;
 }
- 
+
 gameTime
 {
-    long inGameTime = (current.minutes*600000000L) + (current.seconds*10000000L) + ((int)Math.Ceiling(current.centiseconds*(5.0/3.0))*100000L);
-    long oldGameTime = (old.minutes*600000000L) + (old.seconds*10000000L) + ((int)Math.Ceiling(old.centiseconds*(5.0/3.0))*100000L);
-	
-	if(vars.countFrames)
-	{
-		long diff = current.frameCount - old.frameCount;
-		vars.timeBuffer = vars.timeBuffer.Add(TimeSpan.FromTicks(diff*166666L)); //16.6666 milliseconds ~ one frame
-	}
-    else if((oldGameTime > inGameTime) && !current.controlActive) //Adds time to total if player dies
-    {
-		vars.timeBuffer = vars.timeBuffer.Add(TimeSpan.FromTicks(oldGameTime - inGameTime));
-    }
-    else if((oldGameTime == 0 && inGameTime > 0) && !current.controlActive)
-    {
-		vars.timeBuffer = vars.timeBuffer.Subtract(TimeSpan.FromTicks(inGameTime));
-    }
-	
-    return TimeSpan.FromTicks(inGameTime + vars.timeBuffer.Ticks);
+	return TimeSpan.FromMilliseconds((vars.timestopFrames*1000)/60 + vars.totalTime*10);
 }
