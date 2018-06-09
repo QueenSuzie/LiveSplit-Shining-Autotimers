@@ -1,5 +1,5 @@
 //Autosplitter that counts frames in cannons core when time is stopped
-//This is version 8
+//This is version 9
 //Original by ShiningFace, edit by turtlechuck
 
 state("sonic2app")
@@ -24,12 +24,16 @@ state("sonic2app")
 
 init
 {
+	refreshRate = 60;
+}
+
+startup
+{
 	vars.totalTime = 0;      //Time accumulated from level timer, in centiseconds
 	vars.timestopFrames = 0; //How many additional frames we added due to timestop
 	vars.countFrames = false;
-	vars.lastGoodTimerVal = current.levelTimerClone;
+	vars.lastGoodTimerVal = Int32.MaxValue;
 	vars.splitDelay = 0;
-	refreshRate = 60;
 }
 
 update
@@ -133,11 +137,9 @@ start
 	vars.totalTime = 0;
 	vars.timestopFrames = 0;
 	vars.countFrames = false;
-	vars.splitDelay = 0;
-	
 	vars.lastGoodTimerVal = current.levelTimerClone;
-
-	return current.runStart && !old.runStart;
+	vars.splitDelay = 0;
+	return (current.runStart && !old.runStart);
 }
 
 split
