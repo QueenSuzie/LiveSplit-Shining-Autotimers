@@ -1,6 +1,6 @@
 //Autosplitter that counts frames in cannons core when time is stopped
-//This is version 10
-//Made by ShiningFace and TurtleChuck
+//This is version 9
+//Original by ShiningFace, edit by turtlechuck
 
 state("sonic2app")
 {
@@ -106,20 +106,17 @@ update
 		int diff = current.frameCount - old.frameCount;
 		vars.timestopFrames = vars.timestopFrames+diff;
 	}
-
+	
 	//Boss stages
-	if (current.stageID == 19 ||
+	if ((current.stageID == 19 ||
 		 current.stageID == 20 ||
 		 current.stageID == 29 ||
 		 current.stageID == 33 ||
-		 current.stageID == 42)
+		 current.stageID == 42) && current.bossHealth == 0)
 	{
-		if (current.timerEnd)
+		if (current.timerEnd && !old.timerEnd)
 		{
-			if (current.bossHealth == 0 && old.bossHealth != 0)
-			{
-				vars.splitDelay = 3;
-			}
+			vars.splitDelay = 3;
 		}
 	}
 	else if (current.stageID == 70) //Route 101/280
