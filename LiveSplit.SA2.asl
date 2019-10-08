@@ -20,6 +20,9 @@ state("sonic2app")
 	int levelTimerClone : 0x0134AFDB;  //0x0174AFDB
 
 	float bossHealth    : 0x019E9604, 0x48;
+	
+	int currMenu        : 0x0197BB10;
+	int currMenuState   : 0x0197BB14;
 }
 
 init
@@ -34,6 +37,8 @@ startup
 	vars.countFrames = false;
 	vars.lastGoodTimerVal = Int32.MaxValue;
 	vars.splitDelay = 0;
+	
+	settings.Add("storyStart", false, "Only start timer when starting a story");
 }
 
 update
@@ -92,7 +97,7 @@ update
 		//Only add positive time
 		int timeToAdd = Math.Max(0, inGameTime-oldGameTime);
 
-		//Dont add time when the timer goes beserk in loading screens
+		//Don't add time when the timer goes beserk in loading screens
 		if (current.controlActive)
 		{
 			vars.totalTime += timeToAdd;
@@ -139,7 +144,21 @@ start
 	vars.countFrames = false;
 	vars.lastGoodTimerVal = current.levelTimerClone;
 	vars.splitDelay = 0;
-	return (current.runStart && !old.runStart);
+	if (current.runStart && !old.runStart &&
+		(!settings["storyStart"] || current.currMenu == 5))
+	{
+		return true;
+	}
+}
+
+reset
+{
+	// Reset if a file is created or deleted.
+	if ((current.currMenu == 9 || current.currMenu == 24) &&
+		(current.currMenuState == 12 || current.currMenuState == 15))
+		{
+			return true;
+		}
 }
 
 split
