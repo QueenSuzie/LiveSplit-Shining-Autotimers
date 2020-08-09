@@ -27,6 +27,23 @@ state("sonic2app")
 init
 {
 	refreshRate = 60;
+	
+	if ((settings["timerPopup"]) && timer.CurrentTimingMethod == TimingMethod.RealTime)
+	{        
+    	var timingMessage = MessageBox.Show
+		(
+       		"This game uses Game Time (IGT) as the main timing method.\n"+
+    		"LiveSplit is currently set to show Real Time (RTA).\n"+
+    		"Would you like to set the timing method to Game Time?",
+       		 "Sonic Adventure 2: Battle | LiveSplit",
+       		MessageBoxButtons.YesNo,MessageBoxIcon.Question
+       	);
+		
+        if (timingMessage == DialogResult.Yes) 
+		{
+				timer.CurrentTimingMethod = TimingMethod.GameTime;
+        }
+	}
 }
 
 startup
@@ -38,21 +55,10 @@ startup
 	vars.lastGoodTimerVal = Int32.MaxValue;
 	vars.splitDelay = 0;
 	vars.setGameTime = false;
-	if (timer.CurrentTimingMethod == TimingMethod.RealTime) {        
-    		var timingMessage = MessageBox.Show (
-       			"This game uses Game Time (IGT) as the main timing method.\n"+
-    			"LiveSplit is currently set to show Real Time (RTA).\n"+
-    			"Would you like to set the timing method to Game Time?",
-       		 	"Sonic Adventure 2: Battle | LiveSplit",
-       			MessageBoxButtons.YesNo,MessageBoxIcon.Question
-       		);
-		
-        	if (timingMessage == DialogResult.Yes) {
-			timer.CurrentTimingMethod = TimingMethod.GameTime;
-        	}
-	}
 	
 	settings.Add("storyStart", false, "Only start timer when starting a story");
+	settings.Add("timerPopup", true, "Ask to switch to IGT on startup");
+	
 }
 
 update
