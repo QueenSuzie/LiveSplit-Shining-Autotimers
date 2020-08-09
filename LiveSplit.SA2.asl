@@ -1,5 +1,4 @@
-//Autosplitter that counts frames in cannons core when time is stopped
-//This is version 9
+//This is version 10
 //Original by ShiningFace, edit by turtlechuck
 
 state("sonic2app")
@@ -32,11 +31,26 @@ init
 
 startup
 {
+	
 	vars.totalTime = 0;      //Time accumulated from level timer, in centiseconds
 	vars.timestopFrames = 0; //How many additional frames we added due to timestop
 	vars.countFrames = false;
 	vars.lastGoodTimerVal = Int32.MaxValue;
 	vars.splitDelay = 0;
+	vars.setGameTime = false;
+	if (timer.CurrentTimingMethod == TimingMethod.RealTime) {        
+    		var timingMessage = MessageBox.Show (
+       			"This game uses Time without Loads (Game Time) as the main timing method.\n"+
+    			"LiveSplit is currently set to show Real Time (RTA).\n"+
+    			"Would you like to set the timing method to Game Time?",
+       		 	"Sonic Adventure 2: Battle | LiveSplit",
+       			MessageBoxButtons.YesNo,MessageBoxIcon.Question
+       		);
+		
+        	if (timingMessage == DialogResult.Yes) {
+			timer.CurrentTimingMethod = TimingMethod.GameTime;
+        	}
+	}
 	
 	settings.Add("storyStart", false, "Only start timer when starting a story");
 }
