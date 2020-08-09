@@ -40,7 +40,7 @@ startup
 	vars.setGameTime = false;
 	if (timer.CurrentTimingMethod == TimingMethod.RealTime) {        
     		var timingMessage = MessageBox.Show (
-       			"This game uses Time without Loads (Game Time) as the main timing method.\n"+
+       			"This game uses Game Time (IGT) as the main timing method.\n"+
     			"LiveSplit is currently set to show Real Time (RTA).\n"+
     			"Would you like to set the timing method to Game Time?",
        		 	"Sonic Adventure 2: Battle | LiveSplit",
