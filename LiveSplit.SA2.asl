@@ -30,19 +30,19 @@ init
 	
 	if ((settings["timerPopup"]) && timer.CurrentTimingMethod == TimingMethod.RealTime)
 	{        
-    	var timingMessage = MessageBox.Show
+    		var timingMessage = MessageBox.Show
 		(
-       		"This game uses Game Time (IGT) as the main timing method.\n"+
-    		"LiveSplit is currently set to show Real Time (RTA).\n"+
-    		"Would you like to set the timing method to Game Time?",
-       		 "Sonic Adventure 2: Battle | LiveSplit",
-       		MessageBoxButtons.YesNo,MessageBoxIcon.Question
-       	);
+       			"This game uses Game Time (IGT) as the main timing method.\n"+
+    			"LiveSplit is currently set to show Real Time (RTA).\n"+
+    			"Would you like to set the timing method to Game Time?",
+       		 	"Sonic Adventure 2: Battle | LiveSplit",
+       			MessageBoxButtons.YesNo,MessageBoxIcon.Question
+       		);
 		
-        if (timingMessage == DialogResult.Yes) 
+        	if (timingMessage == DialogResult.Yes) 
 		{
-				timer.CurrentTimingMethod = TimingMethod.GameTime;
-        }
+			timer.CurrentTimingMethod = TimingMethod.GameTime;
+        	}
 	}
 }
 
