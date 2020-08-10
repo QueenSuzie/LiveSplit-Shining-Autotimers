@@ -17,10 +17,6 @@ init
 	{
 		version = "v1.0.0.0 Steam";
 	}
-	if (moduleSize == 174698496)
-	{
-		version = "v1.0.1.0 Steam";
-	}
 	
 	if ((settings["timerPopup"]) && timer.CurrentTimingMethod == TimingMethod.RealTime)
 	{        
