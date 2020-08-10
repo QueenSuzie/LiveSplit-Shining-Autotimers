@@ -42,7 +42,7 @@ startup
 	vars.stopwatch = new Stopwatch();
 	vars.splitNumber = 0;
 	vars.splitDelay = 0;
-	settings.Add("timerPopup", true, "Ask to switch to Loadless on startup");
+	settings.Add("timerPopup", true, "Prompt to use Loadless on startup");
 }
 
 
