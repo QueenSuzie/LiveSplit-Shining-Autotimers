@@ -1,4 +1,4 @@
-//Version 3 by ShiningFace
+//Version 4 by ShiningFace
 state("Prey", "v1.0.0.0")
 {
 	bool isLoading : 0x2433B13;
@@ -40,16 +40,18 @@ startup
 {
 	vars.setGameTime = false;
 	vars.stopwatch = new Stopwatch();
-	vars.splitNumber = 0;
+	vars.splitCounter = 0;
 	vars.splitDelay = 0;
+	vars.cutsceneStartup = 0;
 	settings.Add("timerPopup", true, "Prompt to use Loadless on startup");
 }
 
 
 start
 {
-	vars.splitNumber = 0;
+	vars.splitCounter = 0;
 	vars.splitDelay = 0;
+	vars.cutsceneStartup = 0;
 	if (current.menuMode == 1 && old.menuMode == 2)
 	{
 		return true;
@@ -65,16 +67,26 @@ update
 	}
 	if (current.isLoading && current.isLoadingMain && !old.isLoadingMain && current.menuMode != 3)
 	{
-		vars.splitNumber += 1;
+		vars.splitCounter += 1;
 	}
 	if (current.isLoading && current.isLoadingMain && !old.isLoadingMain && current.menuMode != 3)
 	{
 		vars.splitDelay = 1;
 	}
-	else if (vars.splitNumber == 10 && current.isInCutscene == 1)
+		else if (vars.cutsceneStartup == 1)
+		{
+			vars.splitDelay = 1;
+		}
+	
+	//Only split if category is Any% or Default
+	if ((timer.Run.CategoryName == "Any%" || timer.Run.CategoryName == "") && vars.splitCounter == 10 && current.isInCutscene == 1)
 	{
-		vars.splitDelay = 1;
+		vars.cutsceneStartup += 1;
 	}
+		else if ((timer.Run.CategoryName == "Any%" || timer.Run.CategoryName == "") && vars.splitCounter != 10)
+		{
+			vars.cutsceneStartup = 0;
+		}
 }
 
 split
