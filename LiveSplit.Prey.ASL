@@ -1,4 +1,4 @@
-//Version 5 by ShiningFace
+//Version 6 by ShiningFace
 state("Prey", "v1.0.0.0")
 {
 	bool isLoading : 0x2433B13;
@@ -74,7 +74,7 @@ update
 			vars.stopwatch.Restart();
 		}
 	
-	//Only Auto Split if the current category is set to Any% or Default in LiveSplit
+	//Only Auto Split if the current category is set to Any% in LiveSplit
 	if (timer.Run.CategoryName == "Any%")
 	{
 		if (current.isLoading && current.isLoadingMain && !old.isLoadingMain && current.menuMode != 3)
