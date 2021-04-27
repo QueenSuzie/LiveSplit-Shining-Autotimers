@@ -33,7 +33,7 @@ init
     		var timingMessage = MessageBox.Show
 			(
        			"This game uses Game Time (IGT) as the main timing method.\n"+
-    			"LiveSplit is currently set to show Real Time (RTA).\n"+
+    			"LiveSplit is currently set to display Real Time (RTA).\n"+
     			"Would you like to set the timing method to Game Time?",
        		 	"Sonic Adventure 2: Battle | LiveSplit",
        			MessageBoxButtons.YesNo,MessageBoxIcon.Question
@@ -57,7 +57,7 @@ startup
 	vars.setGameTime = false;
 	
 	settings.Add("storyStart", false, "Only start timer when starting a story");
-	settings.Add("timerPopup", true, "Ask to switch to IGT on startup");
+	settings.Add("timerPopup", false, "Ask to switch to IGT on startup");
 	
 }
 
