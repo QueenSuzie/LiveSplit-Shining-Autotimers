@@ -146,7 +146,7 @@ update
 	}
 	else if (current.stageID == 70) //Route 101/280
 	{
-		if (current.timerEnd && !old.timerEnd && current.menuMode != 12)
+		if (current.timerEnd && !old.timerEnd && current.controlActive && current.menuMode != 12)
 		{
 			vars.splitDelay = 3;
 		}
