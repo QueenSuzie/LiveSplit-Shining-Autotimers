@@ -1,22 +1,35 @@
-//This is version 10
-//Original by ShiningFace, edit by turtlechuck
+//This is version 11
+//By ShiningFace, Jelly
 
 state("sonic2app")
 {
+	bool timerEnd       : 0x0134AFDA;
 	bool runStart       : 0x0134AFFA;
 	bool controlActive  : 0x0134AFFE;
-	bool timerEnd       : 0x0134AFDA;
 	bool levelEnd       : 0x0134B002;
+	bool inCutscene     : 0x015420F8;
+	bool nowLoading     : 0x016557E4;
+	bool inAMV          : 0x016EDE28;
+	bool inEmblem       : 0x01919BE0;
 
-	int frameCount      : 0x0134B038;
+	byte totalScore     : 0x0133B970;
 	byte timestop       : 0x0134AFF7;
 	byte menuMode       : 0x01534BE0;
+	byte saveChao       : 0x015F645C;
+	byte menuChao       : 0x016276D8;
+	byte mainMenu1      : 0x0191BD2C;
+	byte mainMenu2      : 0x0197BAF4;
+	byte stageSelect    : 0x0191BEAC;
+	byte twoplayerMode  : 0x0191B7A0;
+	
+	byte pauseCutscene  : 0x019CFF00;
 
 	byte stageID        : 0x01534B70;
-
 	//Get minutes, seconds, and centiseconds all in one read
 	int levelTimer      : 0x015457F8;  //0x019457F8
 	int levelTimerClone : 0x0134AFDB;  //0x0174AFDB
+	
+	int frameCount      : 0x0134B038;
 
 	float bossHealth    : 0x019E9604, 0x48;
 	
@@ -164,7 +177,7 @@ start
 	vars.countFrames = false;
 	vars.lastGoodTimerVal = current.levelTimerClone;
 	vars.splitDelay = 0;
-	if (current.runStart && !old.runStart &&
+	if (current.runStart && current.nowLoading && current.menuMode != 0 && current.menuMode != 2 && 
 		(!settings["storyStart"] || current.currMenu == 5))
 	{
 		return true;
