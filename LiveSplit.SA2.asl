@@ -177,7 +177,7 @@ start
 	vars.countFrames = false;
 	vars.lastGoodTimerVal = current.levelTimerClone;
 	vars.splitDelay = 0;
-	if (current.controlActive && !current.inCutscene)
+	if ((current.timerEnd && current.stageID == 0) || (current.controlActive && !current.inCutscene))
 	{
 		return false;
 	}
