@@ -39,8 +39,6 @@ state("sonic2app")
 
 init
 {
-	refreshRate = 60;
-	
 	if ((settings["timerPopup"]) && timer.CurrentTimingMethod == TimingMethod.RealTime)
 	{        
     		var timingMessage = MessageBox.Show
@@ -61,7 +59,7 @@ init
 
 startup
 {
-	
+	refreshRate = 60;
 	vars.totalTime = 0;      //Time accumulated from level timer, in centiseconds
 	vars.timestopFrames = 0; //How many additional frames we added due to timestop
 	vars.countFrames = false;
