@@ -12,7 +12,7 @@ state("sonic2app")
 	bool inAMV          : 0x016EDE28;
 	bool inEmblem       : 0x01919BE0;
 
-	byte totalScore     : 0x0133B970;
+	short totalScore     : 0x0133B970;
 	byte timestop       : 0x0134AFF7;
 	byte menuMode       : 0x01534BE0;
 	byte saveChao       : 0x015F645C;
