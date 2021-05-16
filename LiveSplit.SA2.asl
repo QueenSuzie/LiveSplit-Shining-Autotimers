@@ -177,7 +177,12 @@ start
 	vars.countFrames = false;
 	vars.lastGoodTimerVal = current.levelTimerClone;
 	vars.splitDelay = 0;
-	if (current.runStart && current.nowLoading && current.menuMode != 0 && current.menuMode != 2 && 
+	if (current.controlActive && !current.inCutscene)
+	{
+		return false;
+	}
+	else if (current.runStart && current.nowLoading && current.mainMenu1 != 1 && 
+	current.mainMenu2 != 1 && current.stageSelect != 1 && current.menuMode == 0 && 
 		(!settings["storyStart"] || current.currMenu == 5))
 	{
 		return true;
