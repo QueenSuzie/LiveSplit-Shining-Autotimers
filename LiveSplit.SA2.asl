@@ -162,6 +162,11 @@ update
 	{
 		vars.splitDelay = 3;
 	}
+	//171 Emblems
+	else if (timer.Run.CategoryName == "171 Emblems" && current.currEmblems == 171 && current.inEmblem && !old.inEmblem)
+	{
+		vars.splitDelay = 3;
+	}
 }
 
 start
