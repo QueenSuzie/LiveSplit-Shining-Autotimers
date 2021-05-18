@@ -25,6 +25,7 @@ state("sonic2app")
 
 	short totalScore    : 0x0133B970;
 	short currEmblems   : 0x01536296;
+	short currEvent     : 0x01628AF4;
 	//Get minutes, seconds, and centiseconds all in one read
 	int levelTimer      : 0x015457F8;  //0x019457F8
 	int levelTimerClone : 0x0134AFDB;  //0x0174AFDB
