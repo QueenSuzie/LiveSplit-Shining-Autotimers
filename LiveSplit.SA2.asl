@@ -1,4 +1,4 @@
-//This is version 12
+//This is version 13
 //By ShiningFace, Jelly
 
 state("sonic2app")
@@ -12,8 +12,8 @@ state("sonic2app")
 	bool inAMV          : 0x016EDE28;
 	bool inEmblem       : 0x01919BE0;
 
-	short totalScore    : 0x0133B970;
 	byte timestop       : 0x0134AFF7;
+	byte stageID        : 0x01534B70;
 	byte menuMode       : 0x01534BE0;
 	byte saveChao       : 0x015F645C;
 	byte menuChao       : 0x016276D8;
@@ -21,10 +21,10 @@ state("sonic2app")
 	byte mainMenu2      : 0x0197BAF4;
 	byte stageSelect    : 0x0191BEAC;
 	byte twoplayerMode  : 0x0191B7A0;
-	
 	byte pauseCutscene  : 0x019CFF00;
 
-	byte stageID        : 0x01534B70;
+	short totalScore    : 0x0133B970;
+	short currEmblems   : 0x01536296;
 	//Get minutes, seconds, and centiseconds all in one read
 	int levelTimer      : 0x015457F8;  //0x019457F8
 	int levelTimerClone : 0x0134AFDB;  //0x0174AFDB
@@ -60,13 +60,14 @@ init
 startup
 {
 	refreshRate = 60;
+	//Variables
 	vars.totalTime = 0;      //Time accumulated from level timer, in centiseconds
 	vars.timestopFrames = 0; //How many additional frames we added due to timestop
 	vars.countFrames = false;
 	vars.lastGoodTimerVal = Int32.MaxValue;
 	vars.splitDelay = 0;
 	vars.setGameTime = false;
-	
+	//Settings
 	settings.Add("storyStart", false, "Only start timer when starting a story");
 	settings.Add("timerPopup", false, "Ask to switch to IGT on startup");
 	
@@ -74,13 +75,8 @@ startup
 
 update
 {
-	vars.splitDelay = Math.Max(0, vars.splitDelay-1);
-	
-	if (current.stageID == 34 ||
-		current.stageID == 35 ||
-		current.stageID == 36 ||
-		current.stageID == 37 ||
-		current.stageID == 38) //Cannons Core
+	//Cannons Core
+	if (current.stageID == 34 || current.stageID == 35 || current.stageID == 36 || current.stageID == 37 || current.stageID == 38)
 	{
 		if (current.timestop == 2) //Count time by frames on timestop
 		{
@@ -106,8 +102,13 @@ update
 	{
 		vars.countFrames = false;
 	}
-
-	//Ensure we have accurate readings of the igt
+	
+	if (vars.countFrames)
+	{
+		int diff = current.frameCount - old.frameCount;
+		vars.timestopFrames = vars.timestopFrames+diff;
+	}
+	//Ensure we have accurate readings of the IGT
 	if ((current.levelTimer & 0xFFFFFF) == (current.levelTimerClone & 0xFFFFFF))
 	{
 		int currMinutes =    (current.levelTimer >> 0)  & 0xFF;
@@ -120,14 +121,11 @@ update
 
 		currCentis = (int)Math.Ceiling(currCentis*(5.0/3.0));
 		oldCentis  =  (int)Math.Ceiling(oldCentis*(5.0/3.0));
-
 		//In game timer converted to centiseconds
 		int inGameTime  = (currMinutes*6000) + (currSeconds*100) + (currCentis);
 		int oldGameTime =  (oldMinutes*6000) +  (oldSeconds*100) +  (oldCentis);
-
 		//Only add positive time
 		int timeToAdd = Math.Max(0, inGameTime-oldGameTime);
-
 		//Don't add time when the timer goes beserk in loading screens
 		if (current.controlActive)
 		{
@@ -136,26 +134,17 @@ update
 
 		vars.lastGoodTimerVal = current.levelTimer;
 	}
-
-	if (vars.countFrames)
-	{
-		int diff = current.frameCount - old.frameCount;
-		vars.timestopFrames = vars.timestopFrames+diff;
-	}
-	
+	//Splitting
+	vars.splitDelay = Math.Max(0, vars.splitDelay-1);
 	//Boss stages
-	if ((current.stageID == 19 ||
-		 current.stageID == 20 ||
-		 current.stageID == 29 ||
-		 current.stageID == 33 ||
-		 current.stageID == 42) && current.bossHealth == 0)
+	if ((current.stageID == 19 || current.stageID == 20 || current.stageID == 29 || current.stageID == 33 || current.stageID == 42) && current.bossHealth == 0)
 	{
 		if (current.timerEnd && !old.timerEnd)
 		{
 			vars.splitDelay = 3;
 		}
 	}
-	//Kart Stages
+	//Kart stages
 	else if (current.stageID == 71 || current.stageID == 70)
 	{
 		if (current.timerEnd && !old.timerEnd && current.controlActive && current.menuMode != 12)
@@ -163,7 +152,13 @@ update
 			vars.splitDelay = 3;
 		}
 	}
-	else if (current.levelEnd && !old.levelEnd) //Normal stages
+	//Normal stages
+	else if (current.levelEnd && !old.levelEnd)
+	{
+		vars.splitDelay = 3;
+	}
+	//180 Emblems
+	else if (timer.Run.CategoryName == "180 Emblems" && current.currEmblems == 180 && current.inEmblem && !old.inEmblem)
 	{
 		vars.splitDelay = 3;
 	}
@@ -173,9 +168,9 @@ start
 {
 	vars.totalTime = 0;
 	vars.timestopFrames = 0;
-	vars.countFrames = false;
 	vars.lastGoodTimerVal = current.levelTimerClone;
 	vars.splitDelay = 0;
+	vars.countFrames = false;
 	if ((current.timerEnd && current.stageID == 0) || (current.controlActive && !current.inCutscene))
 	{
 		return false;
@@ -190,9 +185,8 @@ start
 
 reset
 {
-	// Reset if a file is created or deleted.
-	if ((current.currMenu == 9 || current.currMenu == 24) &&
-		(current.currMenuState == 12 || current.currMenuState == 15))
+	// Reset if a file is created or deleted
+	if ((current.currMenu == 9 || current.currMenu == 24) && (current.currMenuState == 12 || current.currMenuState == 15))
 		{
 			return true;
 		}
@@ -210,5 +204,5 @@ isLoading
 
 gameTime
 {
-	return TimeSpan.FromMilliseconds((vars.timestopFrames*1000)/60 + vars.totalTime*10);
+	return TimeSpan.FromMilliseconds(vars.timestopFrames*1000.0/60.0 + vars.totalTime*10.0);
 }
