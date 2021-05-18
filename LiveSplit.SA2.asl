@@ -63,10 +63,8 @@ startup
 	//Variables
 	vars.totalTime = 0;      //Time accumulated from level timer, in centiseconds
 	vars.timestopFrames = 0; //How many additional frames we added due to timestop
-	vars.countFrames = false;
 	vars.lastGoodTimerVal = Int32.MaxValue;
 	vars.splitDelay = 0;
-	vars.setGameTime = false;
 	//Settings
 	settings.Add("storyStart", false, "Only start timer when starting a story");
 	settings.Add("timerPopup", false, "Ask to switch to IGT on startup");
