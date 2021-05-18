@@ -1,4 +1,4 @@
-//This is version 11
+//This is version 12
 //By ShiningFace, Jelly
 
 state("sonic2app")
@@ -101,9 +101,9 @@ update
 			vars.countFrames = false;
 		}
 	}
+	//Don't count time by frames anywhere else but cannons core
 	else
 	{
-		//Don't count time by frames anywhere else but cannons core
 		vars.countFrames = false;
 	}
 
@@ -155,7 +155,8 @@ update
 			vars.splitDelay = 3;
 		}
 	}
-	else if (current.stageID == 70) //Route 101/280
+	//Kart Stages
+	else if (current.stageID == 71 || current.stageID == 70)
 	{
 		if (current.timerEnd && !old.timerEnd && current.controlActive && current.menuMode != 12)
 		{
