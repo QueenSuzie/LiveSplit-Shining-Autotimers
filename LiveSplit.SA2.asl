@@ -12,12 +12,13 @@ state("sonic2app")
 	bool inAMV          : 0x016EDE28;
 	bool inEmblem       : 0x01919BE0;
 
-	byte twoplayerMode  : 0x0134AFDE;
+	byte bossRush       : 0x00877DC4;
 	byte timestop       : 0x0134AFF7;
 	byte stageID        : 0x01534B70;
 	byte menuMode       : 0x01534BE0;
 	byte saveChao       : 0x015F645C;
 	byte menuChao       : 0x016276D8;
+	byte twoplayerMenu  : 0x0191B88C;
 	byte mainMenu1      : 0x0191BD2C;
 	byte mainMenu2      : 0x0197BAE0;
 	byte stageSelect    : 0x0191BEAC;
