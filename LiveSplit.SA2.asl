@@ -12,7 +12,6 @@ state("sonic2app")
 	bool inAMV          : 0x016EDE28;
 	bool inEmblem       : 0x01919BE0;
 
-	byte bossRush       : 0x00877DC4;
 	byte timestop       : 0x0134AFF7;
 	byte stageID        : 0x01534B70;
 	byte menuMode       : 0x01534BE0;
@@ -44,19 +43,19 @@ init
 {
 	if ((settings["timerPopup"]) && timer.CurrentTimingMethod == TimingMethod.RealTime)
 	{        
-    		var timingMessage = MessageBox.Show
-			(
-       			"This game uses Game Time (IGT) as the main timing method.\n"+
-    			"LiveSplit is currently set to display Real Time (RTA).\n"+
-    			"Would you like to set the timing method to Game Time?",
-       		 	"Sonic Adventure 2: Battle | LiveSplit",
-       			MessageBoxButtons.YesNo,MessageBoxIcon.Question
-       		);
+    	var timingMessage = MessageBox.Show
+		(
+       		"This game uses Game Time (IGT) as the main timing method.\n"+
+    		"LiveSplit is currently set to display Real Time (RTA).\n"+
+    		"Would you like to set the timing method to Game Time?",
+       	 	"Sonic Adventure 2: Battle | LiveSplit",
+       		MessageBoxButtons.YesNo,MessageBoxIcon.Question
+       	);
 		
-        	if (timingMessage == DialogResult.Yes) 
-			{
-				timer.CurrentTimingMethod = TimingMethod.GameTime;
-        	}
+        if (timingMessage == DialogResult.Yes) 
+		{
+			timer.CurrentTimingMethod = TimingMethod.GameTime;
+        }
 	}
 }
 
