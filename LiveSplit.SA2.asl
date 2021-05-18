@@ -19,7 +19,7 @@ state("sonic2app")
 	byte saveChao       : 0x015F645C;
 	byte menuChao       : 0x016276D8;
 	byte mainMenu1      : 0x0191BD2C;
-	byte mainMenu2      : 0x0197BAF4;
+	byte mainMenu2      : 0x0197BAE0;
 	byte stageSelect    : 0x0191BEAC;
 	byte pauseCutscene  : 0x019CFF00;
 
