@@ -1,4 +1,4 @@
-//This is version 13
+//This is version 14
 //By ShiningFace, Jelly
 
 state("sonic2app")
@@ -12,6 +12,7 @@ state("sonic2app")
 	bool inAMV          : 0x016EDE28;
 	bool inEmblem       : 0x01919BE0;
 
+	byte twoplayerMode  : 0x0134AFDE;
 	byte timestop       : 0x0134AFF7;
 	byte stageID        : 0x01534B70;
 	byte menuMode       : 0x01534BE0;
@@ -20,10 +21,10 @@ state("sonic2app")
 	byte mainMenu1      : 0x0191BD2C;
 	byte mainMenu2      : 0x0197BAF4;
 	byte stageSelect    : 0x0191BEAC;
-	byte twoplayerMode  : 0x0191B7A0;
 	byte pauseCutscene  : 0x019CFF00;
 
 	short totalScore    : 0x0133B970;
+	short currRings     : 0x0134B028;
 	short currEmblems   : 0x01536296;
 	short currEvent     : 0x01628AF4;
 	//Get minutes, seconds, and centiseconds all in one read
@@ -69,13 +70,22 @@ startup
 	//Settings
 	settings.Add("storyStart", false, "Only start timer when starting a story");
 	settings.Add("timerPopup", false, "Ask to switch to IGT on startup");
-	
+	settings.Add("cannonsCore", false, "Split only when finishing Sonic's portion of Cannon's Core");
 }
 
 update
 {
+	//Counts emblem cutscene if a specified category
+	if ((timer.Run.CategoryName == "Any%" || timer.Run.CategoryName == "180 Emblems" || timer.Run.CategoryName == "171 Emblems") && current.inEmblem)
+	{
+		if (!current.nowLoading)
+		{
+			vars.countFrames = true;
+		}
+		else vars.countFrames = false;
+	}
 	//Cannons Core
-	if (current.stageID == 34 || current.stageID == 35 || current.stageID == 36 || current.stageID == 37 || current.stageID == 38)
+	else if (current.stageID == 34 || current.stageID == 35 || current.stageID == 36 || current.stageID == 37 || current.stageID == 38)
 	{
 		if (current.timestop == 2) //Count time by frames on timestop
 		{
@@ -147,6 +157,18 @@ update
 	else if (current.stageID == 71 || current.stageID == 70)
 	{
 		if (current.timerEnd && !old.timerEnd && current.controlActive && current.menuMode != 12)
+		{
+			vars.splitDelay = 3;
+		}
+	}
+	//Cannon's Core
+	else if (current.stageID == 38 || current.stageID == 37 || current.stageID == 36 || current.stageID == 35)
+	{
+		if (!settings["CannonsCore"] && current.currRings < 100)
+		{
+			vars.splitDelay = 0;
+		}
+		else if (current.levelEnd && !old.levelEnd)
 		{
 			vars.splitDelay = 3;
 		}
