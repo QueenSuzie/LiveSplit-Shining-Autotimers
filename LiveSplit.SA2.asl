@@ -71,6 +71,7 @@ startup
 	settings.Add("storyStart", false, "Only start timer when starting a story");
 	settings.Add("timerPopup", false, "Ask to switch to IGT on startup");
 	settings.Add("cannonsCore", false, "Only split when a mission is completed in Cannon's Core");
+	settings.Add("bossRush", false, "Only split after beating the last boss of a story in boss rush");
 }
 
 update
@@ -145,6 +146,11 @@ update
 	}
 	//Splitting
 	vars.splitDelay = Math.Max(0, vars.splitDelay-1);
+	//Boss rush
+	if ((settings["bossRush"]) && current.bossRush == 1 && current.stageID != 42 && current.stageID != 66)
+	{
+		vars.splitDelay = 0;
+	}
 	//Boss stages
 	if ((current.stageID == 19 || current.stageID == 20 || current.stageID == 29 || current.stageID == 33 || current.stageID == 42) && current.bossHealth == 0)
 	{
