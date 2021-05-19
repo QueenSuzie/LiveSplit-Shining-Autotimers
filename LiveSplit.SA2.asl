@@ -70,7 +70,7 @@ startup
 	//Settings
 	settings.Add("storyStart", false, "Only start timer when starting a story");
 	settings.Add("timerPopup", false, "Ask to switch to IGT on startup");
-	settings.Add("cannonsCore", false, "Split only when finishing Sonic's portion of Cannon's Core");
+	settings.Add("cannonsCore", false, "Split only when finishing a mission on Cannon's Core");
 }
 
 update
