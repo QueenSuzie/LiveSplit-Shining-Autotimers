@@ -1,4 +1,4 @@
-//This is version 14
+//This is version 15
 //By ShiningFace, Jelly
 
 state("sonic2app")
@@ -70,7 +70,6 @@ startup
 	//Settings
 	settings.Add("storyStart", false, "Only start timer when starting a story");
 	settings.Add("timerPopup", false, "Ask to switch to IGT on startup");
-	settings.Add("cannonsCore", false, "Split only when finishing a mission on Cannon's Core");
 }
 
 update
@@ -162,17 +161,17 @@ update
 		}
 	}
 	//Cannon's Core
-	else if (!settings["CannonsCore"] && (current.stageID == 38 || current.stageID == 37 || current.stageID == 36 || current.stageID == 35))
-	{
-		if (!current.controlActive)
-		{
-			vars.splitDelay = 0;
-		}
-		else if (current.levelEnd && !old.levelEnd)
-		{
-			vars.splitDelay = 3;
-		}
-	}
+	//else if (current.stageID == 38 || current.stageID == 37 || current.stageID == 36 || current.stageID == 35)
+	//{
+	//	if (!current.controlActive)
+	//	{
+	//		vars.splitDelay = 0;
+	//	}
+	//	else if (current.levelEnd && !old.levelEnd)
+	//	{
+	//		vars.splitDelay = 3;
+	//	}
+	//}
 	//Normal stages
 	else if (current.levelEnd && !old.levelEnd)
 	{
