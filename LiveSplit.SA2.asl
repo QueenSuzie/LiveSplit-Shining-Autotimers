@@ -70,6 +70,7 @@ startup
 	//Settings
 	settings.Add("storyStart", false, "Only start timer when starting a story");
 	settings.Add("timerPopup", false, "Ask to switch to IGT on startup");
+	settings.Add("cannonsCore", false, "Only split when mission is completed in cannon's core");
 }
 
 update
@@ -161,17 +162,17 @@ update
 		}
 	}
 	//Cannon's Core
-	//else if (current.stageID == 38 || current.stageID == 37 || current.stageID == 36 || current.stageID == 35)
-	//{
-	//	if (!current.controlActive)
-	//	{
-	//		vars.splitDelay = 0;
-	//	}
-	//	else if (current.levelEnd && !old.levelEnd)
-	//	{
-	//		vars.splitDelay = 3;
-	//	}
-	//}
+	else if ((settings["cannonsCore"]) && (current.stageID == 38 || current.stageID == 37 || current.stageID == 36 || current.stageID == 35))
+	{
+		if (!current.controlActive)
+		{
+			vars.splitDelay = 0;
+		}
+		else if (current.levelEnd && !old.levelEnd)
+		{
+			vars.splitDelay = 3;
+		}
+	}
 	//Normal stages
 	else if (current.levelEnd && !old.levelEnd)
 	{
