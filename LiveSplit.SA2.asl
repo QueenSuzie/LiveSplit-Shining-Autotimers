@@ -77,16 +77,16 @@ startup
 update
 {
 	//Counts emblem cutscene if a specified category
-	if ((timer.Run.CategoryName == "Any%" || timer.Run.CategoryName == "180 Emblems" || timer.Run.CategoryName == "171 Emblems") && current.inEmblem)
-	{
-		if (!current.nowLoading)
-		{
-			vars.countFrames = true;
-		}
-		else vars.countFrames = false;
-	}
+	//if ((timer.Run.CategoryName == "Any%" || timer.Run.CategoryName == "180 Emblems" || timer.Run.CategoryName == "171 Emblems") && current.inEmblem)
+	//{
+	//	if (!current.nowLoading)
+	//	{
+	//		vars.countFrames = true;
+	//	}
+	//	else vars.countFrames = false;
+	//}
 	//Cannons Core
-	else if (current.stageID == 34 || current.stageID == 35 || current.stageID == 36 || current.stageID == 37 || current.stageID == 38)
+	if (current.stageID == 34 || current.stageID == 35 || current.stageID == 36 || current.stageID == 37 || current.stageID == 38)
 	{
 		if (current.timestop == 2) //Count time by frames on timestop
 		{
