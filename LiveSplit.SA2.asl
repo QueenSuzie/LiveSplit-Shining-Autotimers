@@ -162,9 +162,9 @@ update
 		}
 	}
 	//Cannon's Core
-	else if (current.stageID == 38 || current.stageID == 37 || current.stageID == 36 || current.stageID == 35)
+	else if (settings["CannonsCore"] && (current.stageID == 38 || current.stageID == 37 || current.stageID == 36 || current.stageID == 35))
 	{
-		if (!settings["CannonsCore"] && current.currRings < 100)
+		if (current.currRings < 100)
 		{
 			vars.splitDelay = 0;
 		}
