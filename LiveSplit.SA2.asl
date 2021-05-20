@@ -185,6 +185,10 @@ update
 	{
 		vars.splitDelay = 3;
 	}
+	else if (timer.Run.CategoryName == "180 Emblems" && current.stageID == 90 && (current.currEmblems > old.currEmblems))
+	{
+		vars.splitDelay = 3;
+	}
 	else if (timer.Run.CategoryName == "180 Emblems" && current.currEmblems == 180 && current.inEmblem && !old.inEmblem)
 	{
 		vars.splitDelay = 3;
