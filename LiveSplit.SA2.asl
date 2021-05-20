@@ -1,4 +1,4 @@
-//This is version 15
+//This is version 16
 //By ShiningFace, Jelly
 
 state("sonic2app")
@@ -11,7 +11,8 @@ state("sonic2app")
 	bool nowLoading     : 0x016557E4;
 	bool inAMV          : 0x016EDE28;
 	bool inEmblem       : 0x01919BE0;
-
+	
+	byte bossRush       : 0x00877DC4;
 	byte timestop       : 0x0134AFF7;
 	byte stageID        : 0x01534B70;
 	byte menuMode       : 0x01534BE0;
@@ -179,18 +180,22 @@ update
 			vars.splitDelay = 3;
 		}
 	}
-	//Normal stages
-	else if (current.levelEnd && !old.levelEnd)
+	//180 Emblems
+	else if (timer.Run.CategoryName == "180 Emblems" && current.stageID == 90 && current.inEmblem && !old.inEmblem)
 	{
 		vars.splitDelay = 3;
 	}
-	//180 Emblems
 	else if (timer.Run.CategoryName == "180 Emblems" && current.currEmblems == 180 && current.inEmblem && !old.inEmblem)
 	{
 		vars.splitDelay = 3;
 	}
 	//171 Emblems
 	else if (timer.Run.CategoryName == "171 Emblems" && current.currEmblems == 171 && current.inEmblem && !old.inEmblem)
+	{
+		vars.splitDelay = 3;
+	}
+	//Normal stages
+	else if (current.levelEnd && !old.levelEnd)
 	{
 		vars.splitDelay = 3;
 	}
