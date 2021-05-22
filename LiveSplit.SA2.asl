@@ -74,7 +74,7 @@ startup
 	settings.Add("timerPopup", false, "Ask to switch to IGT on startup");
 	settings.Add("cannonsCore", false, "Only split when a mission is completed in Cannon's Core");
 	settings.Add("bossRush", false, "Only split after beating the last boss of a story in boss rush");
-	settings.Add("chaoRace", false, "Split after every chao race (180 Only)");
+	settings.Add("chaoRace", false, "Split after exiting every chao race");
 }
 
 update
@@ -182,16 +182,16 @@ update
 			vars.splitDelay = 3;
 		}
 	}
+	//Chao World
+	else if ((settings["chaoRace"]) && current.stageID == 90 && current.raceChao != 1 && old.raceChao == 1)
+	{
+		vars.splitDelay = 3;
+	}
+	else if (current.stageID == 90 && current.raceChao != 1 && current.inEmblem && !old.inEmblem)
+	{
+		vars.splitDelay = 3;
+	}
 	//180 Emblems
-	else if ((settings["chaoRace"]) && timer.Run.CategoryName == "180 Emblems" && 
-	current.stageID == 90 && current.raceChao != 1 && old.raceChao == 1 && !current.inEmblem)
-	{
-		vars.splitDelay = 3;
-	}
-	else if (timer.Run.CategoryName == "180 Emblems" && current.stageID == 90 && current.inEmblem && !old.inEmblem)
-	{
-		vars.splitDelay = 3;
-	}
 	else if (timer.Run.CategoryName == "180 Emblems" && current.currEmblems == 180 && current.inEmblem && !old.inEmblem)
 	{
 		vars.splitDelay = 3;
