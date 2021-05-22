@@ -1,5 +1,5 @@
-//This is version 16
-//By ShiningFace, Jelly
+//This is version 17
+//By ShiningFace, Jelly, IDGeek
 
 state("sonic2app")
 {
@@ -18,6 +18,7 @@ state("sonic2app")
 	byte menuMode       : 0x01534BE0;
 	byte saveChao       : 0x015F645C;
 	byte menuChao       : 0x016276D8;
+	byte raceChao       : 0x019D2784;
 	byte twoplayerMenu  : 0x0191B88C;
 	byte mainMenu1      : 0x0191BD2C;
 	byte mainMenu2      : 0x0197BAE0;
@@ -73,6 +74,7 @@ startup
 	settings.Add("timerPopup", false, "Ask to switch to IGT on startup");
 	settings.Add("cannonsCore", false, "Only split when a mission is completed in Cannon's Core");
 	settings.Add("bossRush", false, "Only split after beating the last boss of a story in boss rush");
+	settings.Add("chaoRace", false, "Split after every chao race (180 Only)");
 }
 
 update
@@ -181,6 +183,11 @@ update
 		}
 	}
 	//180 Emblems
+	else if ((settings["chaoRace"]) && timer.Run.CategoryName == "180 Emblems" && 
+	current.stageID == 90 && current.raceChao != 1 && old.raceChao == 1 && !current.inEmblem)
+	{
+		vars.splitDelay = 3;
+	}
 	else if (timer.Run.CategoryName == "180 Emblems" && current.stageID == 90 && current.inEmblem && !old.inEmblem)
 	{
 		vars.splitDelay = 3;
