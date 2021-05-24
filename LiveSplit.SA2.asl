@@ -215,7 +215,7 @@ start
 	vars.lastGoodTimerVal = current.levelTimerClone;
 	vars.splitDelay = 0;
 	vars.countFrames = false;
-	if ((current.timerEnd && current.stageID == 0) || (current.controlActive && !current.inCutscene))
+	if ((current.timerEnd && current.stageID == 0 && current.currMenu != 5) || (current.controlActive && !current.inCutscene))
 	{
 		return false;
 	}
