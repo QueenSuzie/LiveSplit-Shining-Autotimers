@@ -215,7 +215,7 @@ start
 	vars.lastGoodTimerVal = current.levelTimerClone;
 	vars.splitDelay = 0;
 	vars.countFrames = false;
-	if (current.currMenuState != 4 && current.currMenuState != 5 && current.currMenuState != 7)
+	if (current.inAMV || (current.currMenuState != 4 && current.currMenuState != 5 && current.currMenuState != 7))
 	{
 		return false;
 	}
