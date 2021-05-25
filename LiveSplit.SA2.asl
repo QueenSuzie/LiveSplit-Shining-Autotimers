@@ -1,4 +1,4 @@
-//This is version 17
+//This is version 18
 //By ShiningFace, Jelly, IDGeek
 
 state("sonic2app")
@@ -215,13 +215,12 @@ start
 	vars.lastGoodTimerVal = current.levelTimerClone;
 	vars.splitDelay = 0;
 	vars.countFrames = false;
-	if ((current.timerEnd && current.stageID == 0 && current.currMenu != 5) || (current.controlActive && !current.inCutscene))
+	if (current.currMenuState != 4 && current.currMenuState != 5 && current.currMenuState != 7)
 	{
 		return false;
 	}
-	else if (current.runStart && current.nowLoading && current.mainMenu1 != 1 && 
-	current.mainMenu2 != 1 && current.stageSelect != 1 && current.menuMode == 0 && 
-		(!settings["storyStart"] || current.currMenu == 5))
+	else if (current.runStart && current.nowLoading && !old.nowLoading && current.mainMenu1 != 1 && 
+	current.mainMenu2 != 1 && current.stageSelect != 1 && (!settings["storyStart"] || current.currMenu == 5))
 	{
 		return true;
 	}
