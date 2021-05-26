@@ -1,4 +1,4 @@
-//This is version 18
+//This is version 18.5
 //By ShiningFace, Jelly, IDGeek
 
 state("sonic2app")
@@ -218,6 +218,15 @@ start
 	if (current.inAMV || (current.currMenuState != 4 && current.currMenuState != 5 && current.currMenuState != 7))
 	{
 		return false;
+	}
+	//Only start timer when starting a story or selecting chao garden
+	else if (timer.Run.CategoryName == "Chao%")
+	{
+		if (current.runStart && current.nowLoading && !old.nowLoading && current.mainMenu1 != 1 && 
+		current.mainMenu2 != 1 && current.stageSelect != 1 && (current.stageID == 90 || current.currMenu == 5))
+		{
+			return true;
+		}
 	}
 	else if (current.runStart && current.nowLoading && !old.nowLoading && current.mainMenu1 != 1 && 
 	current.mainMenu2 != 1 && current.stageSelect != 1 && (!settings["storyStart"] || current.currMenu == 5))
