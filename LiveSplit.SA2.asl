@@ -1,4 +1,4 @@
-//This is version 18.5
+//This is version 19
 //By ShiningFace, Jelly, IDGeek
 
 state("sonic2app")
@@ -70,11 +70,12 @@ startup
 	vars.lastGoodTimerVal = Int32.MaxValue;
 	vars.splitDelay = 0;
 	//Settings
-	settings.Add("storyStart", false, "Only start timer when starting a story");
 	settings.Add("timerPopup", false, "Ask to switch to IGT on startup");
-	settings.Add("cannonsCore", false, "Only split when a mission is completed in Cannon's Core");
-	settings.Add("bossRush", false, "Only split after beating the last boss of a story in boss rush");
-	settings.Add("chaoRace", false, "Split after exiting every chao race");
+	settings.Add("storyStart", false, "Only start timer when starting a story");
+	settings.Add("stageExit", false, "Restart timer upon manually exiting a stage in stage select");
+	settings.Add("cannonsCore", false, "Only split in Cannon's Core when a mission is completed");
+	settings.Add("bossRush", false, "Only split in Boss Rush when defeating the last boss of a story");
+	settings.Add("chaoRace", false, "Split when exiting a Chao Race");
 }
 
 update
@@ -237,11 +238,19 @@ start
 
 reset
 {
-	// Reset if a file is created or deleted
+	//Reset if a file is created or deleted
 	if ((current.currMenu == 9 || current.currMenu == 24) && (current.currMenuState == 12 || current.currMenuState == 15))
+	{
+		return true;
+	}
+	//Reset if manually exiting a stage during stage select
+	else if (settings["stageExit"])
+	{
+		if (current.menuMode == 0 && current.stageSelect == 1 && old.stageSelect != 1 && !current.timerEnd)
 		{
 			return true;
 		}
+	}
 }
 
 split
