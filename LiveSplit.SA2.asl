@@ -1,4 +1,4 @@
-//This is version 19
+//This is version 20
 //By ShiningFace, Jelly, IDGeek
 
 state("sonic2app")
@@ -70,27 +70,28 @@ startup
 	vars.lastGoodTimerVal = Int32.MaxValue;
 	vars.splitDelay = 0;
 	//Settings
-	settings.Add("timerPopup", false, "Ask to switch to IGT on startup");
-	settings.Add("storyStart", false, "Only start timer when starting a story");
-	settings.Add("stageExit", false, "Restart timer upon manually exiting a stage in stage select");
-	settings.Add("cannonsCore", false, "Only split in Cannon's Core when a mission is completed");
-	settings.Add("bossRush", false, "Only split in Boss Rush when defeating the last boss of a story");
-	settings.Add("chaoRace", false, "Split when exiting a Chao Race");
+	settings.Add("timerPopup", false, "Ask to switch to IGT on startup.");
+	settings.Add("storyStart", false, "Only start timer when starting a story.");
+	settings.Add("stageExit", false, "Restart timer upon manually exiting a stage in stage select.");
+	settings.Add("cannonsCore", false, "Only split in Cannon's Core when a mission is completed.");
+	settings.Add("bossRush", false, "Only split in Boss Rush when defeating the last boss of a story.");
+	settings.Add("chaoRace", false, "Split when exiting a Chao Race.");
+	settings.Add("emblemTiming", false, "Include timing for emblem cutscenes outside of 180/171 emblems.");
 }
 
 update
 {
 	//Counts emblem cutscene if a specified category
-	//if ((timer.Run.CategoryName == "Any%" || timer.Run.CategoryName == "180 Emblems" || timer.Run.CategoryName == "171 Emblems") && current.inEmblem)
-	//{
-	//	if (!current.nowLoading)
-	//	{
-	//		vars.countFrames = true;
-	//	}
-	//	else vars.countFrames = false;
-	//}
+	if (((settings["emblemTiming"]) || timer.Run.CategoryName == "180 Emblems" || timer.Run.CategoryName == "171 Emblems") && current.inEmblem)
+	{
+		if (!current.nowLoading)
+		{
+			vars.countFrames = true;
+		}
+		else vars.countFrames = false;
+	}
 	//Cannons Core
-	if (current.stageID == 34 || current.stageID == 35 || current.stageID == 36 || current.stageID == 37 || current.stageID == 38)
+	else if (current.stageID == 34 || current.stageID == 35 || current.stageID == 36 || current.stageID == 37 || current.stageID == 38)
 	{
 		if (current.timestop == 2) //Count time by frames on timestop
 		{
