@@ -76,7 +76,7 @@ startup
 	settings.Add("cannonsCore", false, "Only split in Cannon's Core when a mission is completed.");
 	settings.Add("bossRush", false, "Only split in Boss Rush when defeating the last boss of a story.");
 	settings.Add("chaoRace", false, "Split when exiting a Chao Race.");
-	settings.Add("emblemTiming", false, "Include timing for emblem cutscenes outside of 180/171 emblems.");
+	settings.Add("emblemTiming", false, "Include timing for emblem cutscenes.");
 }
 
 update
