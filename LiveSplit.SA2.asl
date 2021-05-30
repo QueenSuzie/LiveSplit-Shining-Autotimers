@@ -82,7 +82,7 @@ startup
 update
 {
 	//Counts emblem cutscene if a specified category
-	if (((settings["emblemTiming"]) || timer.Run.CategoryName == "180 Emblems" || timer.Run.CategoryName == "171 Emblems") && current.inEmblem)
+	if (settings["emblemTiming"])
 	{
 		if (!current.nowLoading)
 		{
