@@ -82,7 +82,7 @@ startup
 update
 {
 	//Counts emblem cutscene if a specified category
-	if (settings["emblemTiming"])
+	if ((settings["emblemTiming"]) && current.inEmblem)
 	{
 		if (!current.nowLoading)
 		{
