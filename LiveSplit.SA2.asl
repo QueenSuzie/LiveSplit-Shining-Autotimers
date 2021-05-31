@@ -1,44 +1,46 @@
-//This is version 20
+//This is version 21
 //By ShiningFace, Jelly, IDGeek
 
 state("sonic2app")
 {
-	bool timerEnd       : 0x0134AFDA;
-	bool runStart       : 0x0134AFFA;
-	bool controlActive  : 0x0134AFFE;
-	bool levelEnd       : 0x0134B002;
-	bool inCutscene     : 0x015420F8;
-	bool nowLoading     : 0x016557E4;
-	bool inAMV          : 0x016EDE28;
-	bool inEmblem       : 0x01919BE0;
+	bool timerEnd         : 0x0134AFDA;
+	bool runStart         : 0x0134AFFA;
+	bool controlActive    : 0x0134AFFE;
+	bool levelEnd         : 0x0134B002;
+	bool inCutscene       : 0x015420F8;
+	bool nowLoading       : 0x016557E4;
+	bool inAMV            : 0x016EDE28;
+	bool inEmblem         : 0x01919BE0;
 	
-	byte bossRush       : 0x00877DC4;
-	byte timestop       : 0x0134AFF7;
-	byte stageID        : 0x01534B70;
-	byte menuMode       : 0x01534BE0;
-	byte saveChao       : 0x015F645C;
-	byte menuChao       : 0x016276D8;
-	byte raceChao       : 0x019D2784;
-	byte twoplayerMenu  : 0x0191B88C;
-	byte mainMenu1      : 0x0191BD2C;
-	byte mainMenu2      : 0x0197BAE0;
-	byte stageSelect    : 0x0191BEAC;
-	byte pauseCutscene  : 0x019CFF00;
+	byte bossRush         : 0x00877DC4;
+	byte timestop         : 0x0134AFF7;
+	byte stageID          : 0x01534B70;
+	byte menuMode         : 0x01534BE0;
+	byte cutsceneControl  : 0x01534B60;
+	byte saveChao         : 0x015F645C;
+	byte menuChao         : 0x016276D8;
+	byte raceChao         : 0x019D2784;
+	byte twoplayerMenu    : 0x0191B88C;
+	byte mainMenu1        : 0x0191BD2C;
+	byte mainMenu2        : 0x0197BAE0;
+	byte stageSelect      : 0x0191BEAC;
+	byte storyRecap       : 0x0191C1AC;
+	byte pauseCutscene    : 0x019CFF00;
 
-	short totalScore    : 0x0133B970;
-	short currRings     : 0x0134B028;
-	short currEmblems   : 0x01536296;
-	short currEvent     : 0x01628AF4;
+	short totalScore      : 0x0133B970;
+	short currRings       : 0x0134B028;
+	short currEmblems     : 0x01536296;
+	short currEvent       : 0x01628AF4;
 	//Get minutes, seconds, and centiseconds all in one read
-	int levelTimer      : 0x015457F8;  //0x019457F8
-	int levelTimerClone : 0x0134AFDB;  //0x0174AFDB
+	int levelTimer        : 0x015457F8;  //0x019457F8
+	int levelTimerClone   : 0x0134AFDB;  //0x0174AFDB
 	
-	int frameCount      : 0x0134B038;
+	int frameCount        : 0x0134B038;
 
-	float bossHealth    : 0x019E9604, 0x48;
+	float bossHealth      : 0x019E9604, 0x48;
 	
-	int currMenu        : 0x0197BB10;
-	int currMenuState   : 0x0197BB14;
+	int currMenu          : 0x0197BB10;
+	int currMenuState     : 0x0197BB14;
 }
 
 init
