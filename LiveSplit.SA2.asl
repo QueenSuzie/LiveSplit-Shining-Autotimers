@@ -1,4 +1,4 @@
-//This is version 21
+//This is version 2.2
 //By ShiningFace, Jelly, IDGeek
 
 state("sonic2app")
@@ -19,6 +19,7 @@ state("sonic2app")
 	byte cutsceneControl  : 0x01534B60;
 	byte saveChao         : 0x015F645C;
 	byte menuChao         : 0x016276D8;
+	byte chaoID           : 0x0165A2CC;
 	byte raceChao         : 0x019D2784;
 	byte twoplayerMenu    : 0x0191B88C;
 	byte mainMenu1        : 0x0191BD2C;
@@ -177,31 +178,24 @@ update
 	//Cannon's Core
 	else if ((settings["cannonsCore"]) && (current.stageID == 38 || current.stageID == 37 || current.stageID == 36 || current.stageID == 35))
 	{
-		if (!current.controlActive)
-		{
-			vars.splitDelay = 0;
-		}
-		else if (current.levelEnd && !old.levelEnd)
+		if (current.controlActive && current.levelEnd && !old.levelEnd)
 		{
 			vars.splitDelay = 3;
 		}
 	}
 	//Chao World
-	else if ((settings["chaoRace"]) && current.stageID == 90 && current.raceChao != 1 && old.raceChao == 1)
-	{
-		vars.splitDelay = 3;
-	}
-	else if (current.stageID == 90 && current.raceChao != 1 && current.inEmblem && !old.inEmblem)
+	else if (((settings["chaoRace"]) && current.stageID == 90 && current.raceChao != 1 && old.raceChao == 1) || 
+	(current.stageID == 90 && current.chaoID == 1 && current.inEmblem && !old.inEmblem))
 	{
 		vars.splitDelay = 3;
 	}
 	//180 Emblems
-	else if (timer.Run.CategoryName == "180 Emblems" && current.currEmblems == 180 && current.inEmblem && !old.inEmblem)
+	else if (timer.Run.CategoryName == "180 Emblems" && current.currEmblems == 180 && old.currEmblems != 180)
 	{
 		vars.splitDelay = 3;
 	}
 	//171 Emblems
-	else if (timer.Run.CategoryName == "171 Emblems" && current.currEmblems == 171 && current.inEmblem && !old.inEmblem)
+	else if (timer.Run.CategoryName == "171 Emblems" && current.currEmblems == 171 && old.currEmblems != 171)
 	{
 		vars.splitDelay = 3;
 	}
