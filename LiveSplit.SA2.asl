@@ -66,7 +66,7 @@ init
 
 startup
 {
-	refreshRate = 60;
+	refreshRate = 120;
 	//Variables
 	vars.totalTime = 0;      //Time accumulated from level timer, in centiseconds
 	vars.timestopFrames = 0; //How many additional frames we added due to timestop
