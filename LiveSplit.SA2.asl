@@ -1,4 +1,4 @@
-//This is version 2.2
+//This is version 2.6
 //By ShiningFace, Jelly, IDGeek
 
 state("sonic2app")
@@ -16,6 +16,7 @@ state("sonic2app")
 	byte timestop         : 0x0134AFF7;
 	byte stageID          : 0x01534B70;
 	byte menuMode         : 0x01534BE0;
+	byte timesRestarted   : 0x01534BE8;
 	byte cutsceneControl  : 0x01534B60;
 	byte saveChao         : 0x015F645C;
 	byte menuChao         : 0x016276D8;
@@ -76,10 +77,11 @@ startup
 	settings.Add("timerPopup", false, "Ask to switch to IGT on startup.");
 	settings.Add("storyStart", false, "Only start timer when starting a story.");
 	settings.Add("stageExit", false, "Restart timer upon manually exiting a stage in stage select.");
+	settings.Add("resetIL", false, "Restart timer upon restart/death for ILs.");
 	settings.Add("cannonsCore", false, "Only split in Cannon's Core when a mission is completed.");
 	settings.Add("bossRush", false, "Only split in Boss Rush when defeating the last boss of a story.");
 	settings.Add("chaoRace", false, "Split when exiting a Chao Race.");
-	settings.Add("emblemTiming", false, "Include timing for emblem cutscenes.");
+	settings.Add("emblemTiming", false, "Include timing for emblem cutscenes outside of 180/171 emblems.");
 }
 
 update
@@ -226,10 +228,19 @@ start
 			return true;
 		}
 	}
+	
 	else if (current.runStart && current.nowLoading && !old.nowLoading && current.mainMenu1 != 1 && 
 	current.mainMenu2 != 1 && current.stageSelect != 1 && (!settings["storyStart"] || current.currMenu == 5))
 	{
 		return true;
+	}
+	//Start timer on resetting a stage
+	else if (settings["resetIL"])
+	{
+		if (!current.levelEnd && !current.controlActive && old.controlActive && current.timerEnd)
+		{
+			return true;
+		}
 	}
 }
 
@@ -244,6 +255,14 @@ reset
 	else if (settings["stageExit"])
 	{
 		if (current.menuMode == 0 && current.stageSelect == 1 && old.stageSelect != 1 && !current.timerEnd)
+		{
+			return true;
+		}
+	}
+	//Reset if leaving a stage
+	else if (settings["resetIL"])
+	{
+		if (!current.levelEnd && !current.controlActive && old.controlActive && current.timerEnd)
 		{
 			return true;
 		}
