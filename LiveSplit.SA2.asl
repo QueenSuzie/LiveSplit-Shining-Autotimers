@@ -213,26 +213,36 @@ start
 	vars.lastGoodTimerVal = current.levelTimerClone;
 	vars.splitDelay = 0;
 	vars.countFrames = false;
-	if (current.inEmblem || current.inAMV || (current.currMenuState != 4 && current.currMenuState != 5 && current.currMenuState != 7))
+	if ((timer.Run.CategoryName != "Any%" && current.currMenuState != 4 && current.currMenuState != 5 && current.currMenuState != 7) || 
+	current.inEmblem || current.inAMV)
 	{
 		return false;
 	}
-	//Only start timer when starting a story or selecting chao garden
-	else if (timer.Run.CategoryName == "Chao%")
+	//Only start timer when selecting 2p mode
+	else if (timer.Run.CategoryName == "Any%")
 	{
-		if (current.runStart && current.nowLoading && !old.nowLoading && current.mainMenu1 != 1 && 
-		current.mainMenu2 != 1 && current.stageSelect != 1 && (current.stageID == 90 || current.currMenu == 5))
+		if (current.mainMenu1 != 1 && current.mainMenu2 != 1 && current.stageSelect != 1 && current.twoplayerMenu == 1 &&
+		!current.nowLoading && old.nowLoading)
 		{
 			return true;
 		}
 	}
-	
-	else if (current.runStart && current.nowLoading && !old.nowLoading && current.mainMenu1 != 1 && 
-	current.mainMenu2 != 1 && current.stageSelect != 1 && (!settings["storyStart"] || current.currMenu == 5))
+	//Only start timer when starting a story or selecting chao garden
+	else if (timer.Run.CategoryName == "Chao%")
+	{
+		if (current.mainMenu1 != 1 && current.mainMenu2 != 1 && current.stageSelect != 1 && (current.stageID == 90 || current.currMenu == 5) && 
+		current.runStart && current.nowLoading && !old.nowLoading)
+		{
+			return true;
+		}
+	}
+	//Normal
+	else if (current.mainMenu1 != 1 && current.mainMenu2 != 1 && current.stageSelect != 1 && (!settings["storyStart"] || current.currMenu == 5) && 
+	((current.menuMode == 1 && old.menuMode != 1) || (!current.nowLoading && old.nowLoading)) && current.runStart)
 	{
 		return true;
 	}
-	//Start timer on resetting a stage
+	//Start timer upon resetting a stage
 	else if (settings["resetIL"])
 	{
 		if (!current.levelEnd && !current.controlActive && old.controlActive && current.timerEnd)
