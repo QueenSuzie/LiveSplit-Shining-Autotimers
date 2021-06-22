@@ -1,4 +1,4 @@
-//This is version 2.6
+//This is version 2.8
 //By ShiningFace, Jelly, IDGeek
 
 state("sonic2app")
@@ -14,13 +14,13 @@ state("sonic2app")
 	
 	byte bossRush         : 0x00877DC4;
 	byte timestop         : 0x0134AFF7;
+	byte currPaused       : 0x015341B4;
 	byte stageID          : 0x01534B70;
 	byte menuMode         : 0x01534BE0;
 	byte timesRestarted   : 0x01534BE8;
-	byte cutsceneControl  : 0x01534B60;
 	byte saveChao         : 0x015F645C;
-	byte menuChao         : 0x016276D8;
 	byte chaoID           : 0x0165A2CC;
+	byte textCutscene     : 0x016EFD44;
 	byte raceChao         : 0x019D2784;
 	byte twoplayerMenu    : 0x0191B88C;
 	byte mainMenu1        : 0x0191BD2C;
@@ -29,13 +29,11 @@ state("sonic2app")
 	byte storyRecap       : 0x0191C1AC;
 	byte pauseCutscene    : 0x019CFF00;
 
-	short totalScore      : 0x0133B970;
-	short currRings       : 0x0134B028;
 	short currEmblems     : 0x01536296;
 	short currEvent       : 0x01628AF4;
 	//Get minutes, seconds, and centiseconds all in one read
-	int levelTimer        : 0x015457F8;  //0x019457F8
-	int levelTimerClone   : 0x0134AFDB;  //0x0174AFDB
+	int levelTimer        : 0x015457F8;
+	int levelTimerClone   : 0x0134AFDB;
 	
 	int frameCount        : 0x0134B038;
 
