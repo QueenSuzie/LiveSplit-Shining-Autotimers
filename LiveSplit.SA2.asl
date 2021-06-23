@@ -1,4 +1,4 @@
-//This is version 2.8
+//This is version 2.9
 //By ShiningFace, Jelly, IDGeek
 
 state("sonic2app")
@@ -14,7 +14,6 @@ state("sonic2app")
 	
 	byte bossRush         : 0x00877DC4;
 	byte timestop         : 0x0134AFF7;
-	byte currPaused       : 0x015341B4;
 	byte stageID          : 0x01534B70;
 	byte menuMode         : 0x01534BE0;
 	byte timesRestarted   : 0x01534BE8;
