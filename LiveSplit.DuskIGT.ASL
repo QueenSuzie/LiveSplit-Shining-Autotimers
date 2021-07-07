@@ -16,7 +16,6 @@ startup
 
 init 
 {
-	version = "Steam";
 	vars.IGT = 0;
 	vars.intRound = 0;
 }
