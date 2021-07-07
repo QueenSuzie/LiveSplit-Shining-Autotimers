@@ -5,6 +5,8 @@ state("Dusk", "Steam")
 	byte Level: "UnityPlayer.dll", 0x1519458, 0x130, 0xE0, 0x38, 0x80, 0xA8, 0x60, 0xE4;
 	float currSeconds: "UnityPlayer.dll", 0x01519458, 0x128, 0x80, 0xC0, 0x60, 0x104;
 	float currMinutes: "UnityPlayer.dll", 0x01519458, 0x128, 0x80, 0x40, 0x60, 0x100;
+	float StatsScreenTimeSeconds: "UnityPlayer.dll", 0x1519458, 0x130, 0x48, 0x120, 0xD0, 0x100, 0x28, 0xB0;
+	float StatsScreenTimeMinutes: "UnityPlayer.dll", 0x1519458, 0x130, 0x20, 0x0, 0x60, 0x10, 0x118, 0xAC;
 }
 
 startup 
@@ -21,7 +23,7 @@ init
 
 update 
 {
-	vars.intRound = (int)Math.Floor(current.currSeconds*100.0);
+	vars.intRound = (int)Math.Floor(current.currSeconds*100);
 	
 	current.IGT = (current.currMinutes*6000.0) + (vars.intRound);
 	
@@ -35,6 +37,10 @@ start
 	vars.intRound = 0;
 	
 	if (current.Level == 3 && current.IGT == 0 && old.IGT != 0) 
+	{
+		return true;
+	}
+	else if (current.Level == 3 && old.Level == 21) 
 	{
 		return true;
 	}
