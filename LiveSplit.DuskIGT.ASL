@@ -1,4 +1,4 @@
-//Version 2 (ShiningFace, TwanJones)
+//Version 3 (ShiningFace, TwanJones)
 
 state("Dusk") 
 {
@@ -23,9 +23,19 @@ init
 update 
 {
 	vars.intRound = (int)Math.Floor(current.currSeconds*100);
+	vars.intRound2 = (int)Math.Round(current.StatsScreenTimeSeconds*100);
 	
-	current.IGT = (current.currMinutes*6000.0) + (vars.intRound);
+	current.Timer = (current.currMinutes*6000.0) + (vars.intRound);
+	current.StatsTimer = (current.StatsScreenTimeMinutes*6000.0) + (vars.intRound2);
 	
+	if (current.StatsTimer != old.StatsTimer)
+	{
+		current.IGT = (current.StatsTimer - old.StatsTimer);
+	}
+	else if (current.Timer != old.Timer)
+	{
+		current.IGT = current.Timer;
+	}
 	double timeToAdd = Math.Max(0, current.IGT - old.IGT);
 	vars.IGT += timeToAdd;
 }
