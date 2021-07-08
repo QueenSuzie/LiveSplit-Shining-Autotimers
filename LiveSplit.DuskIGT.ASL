@@ -28,7 +28,7 @@ update
 	current.Timer = (current.currMinutes*6000.0) + (vars.intRound);
 	current.StatsTimer = (current.StatsScreenTimeMinutes*6000.0) + (vars.intRound2);
 	
-	if (current.StatsTimer != old.StatsTimer)
+	if ((current.StatsTimer != old.StatsTimer) && current.StatsTimer != 0)
 	{
 		current.IGT = (current.StatsTimer - old.StatsTimer);
 	}
