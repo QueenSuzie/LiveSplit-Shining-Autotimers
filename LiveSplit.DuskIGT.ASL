@@ -1,4 +1,4 @@
-//Version 4 (ShiningFace, TwanJones)
+//Version 5 (ShiningFace, TwanJones)
 
 state("Dusk") 
 {
@@ -31,7 +31,7 @@ update
 	
 	if (current.StatsTimer > old.StatsTimer)
 	{
-		current.IGT = current.StatsTimer;
+		current.IGT = (current.StatsTimer - old.StatsTimer);
 	}
 	else if (current.Timer >= old.Timer)
 	{
