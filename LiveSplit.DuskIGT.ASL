@@ -11,28 +11,29 @@ state("Dusk")
 
 startup 
 {
-	refreshRate = 60;
+	refreshRate = 120;
 }
 
 init 
 {
 	vars.IGT = 0;
 	vars.intRound = 0;
+	vars.intRound2 = 0;
 }
 
 update 
 {
-	vars.intRound = (int)Math.Floor(current.currSeconds*100);
+	vars.intRound = (int)Math.Round(current.currSeconds*100);
 	vars.intRound2 = (int)Math.Round(current.StatsScreenTimeSeconds*100);
 	
 	current.Timer = (current.currMinutes*6000.0) + (vars.intRound);
 	current.StatsTimer = (current.StatsScreenTimeMinutes*6000.0) + (vars.intRound2);
 	
-	if ((current.StatsTimer > old.StatsTimer) && current.StatsTimer != 0)
+	if (current.StatsTimer > old.StatsTimer)
 	{
-		current.IGT = (current.StatsTimer - old.StatsTimer);
+		current.IGT = current.StatsTimer;
 	}
-	else if ((current.Timer > old.Timer) && current.Timer != 0)
+	else if (current.Timer >= old.Timer)
 	{
 		current.IGT = current.Timer;
 	}
@@ -44,20 +45,17 @@ start
 {
 	vars.IGT = 0;
 	vars.intRound = 0;
+	vars.intRound2 = 0;
 	
-	if (current.Level == 3 && current.IGT == 0 && old.IGT != 0) 
+	if (current.Level == 3 && (current.Timer < old.Timer)) 
 	{
 		return true;
 	}
-	else if (current.Level == 3 && old.Level == 21) 
+	else if ((current.Level == 3 || current.Level == 22 || current.Level == 37) && old.Level == 21)
 	{
 		return true;
 	}
-	else if (current.Level == 22 && old.Level == 33) 
-	{
-		return true;
-	}
-	else if (current.Level == 37 && old.Level == 48) 
+	else if ((current.Level == 22 && old.Level == 33) || (current.Level == 37 && old.Level == 48))
 	{
 		return true;
 	}
@@ -84,7 +82,7 @@ split
 
 reset 
 {
-	if (current.Level == 3 && current.IGT == 0 && old.IGT != 0)
+	if (current.Level == 3 && (current.Timer < old.Timer))
 	{
 		return true;
 	}
