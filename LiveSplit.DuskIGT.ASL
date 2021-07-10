@@ -33,7 +33,7 @@ update
 	{
 		current.IGT = (current.StatsTimer - old.StatsTimer);
 	}
-	else if ((current.Timer > old.Timer) && current.Timer != 0)
+	else if (current.Timer > old.Timer)
 	{
 		current.IGT = current.Timer;
 	}
