@@ -23,7 +23,7 @@ init
 
 update 
 {
-	vars.intRound = (int)Math.Round(current.currSeconds*100);
+	vars.intRound = (int)Math.Floor(current.currSeconds*100);
 	vars.intRound2 = (int)Math.Round(current.StatsScreenTimeSeconds*100);
 	
 	current.Timer = (current.currMinutes*6000.0) + (vars.intRound);
@@ -33,7 +33,7 @@ update
 	{
 		current.IGT = (current.StatsTimer - old.StatsTimer);
 	}
-	else if (current.Timer >= old.Timer)
+	else if ((current.Timer > old.Timer) && current.Timer != 0)
 	{
 		current.IGT = current.Timer;
 	}
