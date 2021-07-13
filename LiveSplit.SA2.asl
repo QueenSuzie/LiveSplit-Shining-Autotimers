@@ -1,4 +1,4 @@
-//This is version 2.9
+//This is version 3
 //By ShiningFace, Jelly, IDGeek
 
 state("sonic2app")
@@ -27,6 +27,7 @@ state("sonic2app")
 	byte stageSelect      : 0x0191BEAC;
 	byte storyRecap       : 0x0191C1AC;
 	byte pauseCutscene    : 0x019CFF00;
+	byte gameplayPause    : 0x021F0014;
 
 	short currEmblems     : 0x01536296;
 	short currEvent       : 0x01628AF4;
@@ -154,22 +155,29 @@ update
 	//Splitting
 	vars.splitDelay = Math.Max(0, vars.splitDelay-1);
 	//Boss rush
-	if ((settings["bossRush"]) && current.bossRush == 1 && current.stageID != 42 && current.stageID != 66)
+	if ((settings["bossRush"]) && current.bossRush == 1 && current.stageID != 66 && current.stageID != 42)
 	{
 		vars.splitDelay = 0;
 	}
-	//Boss stages
-	if ((current.stageID == 19 || current.stageID == 20 || current.stageID == 29 || current.stageID == 33 || current.stageID == 42) && current.bossHealth == 0)
+	//Final boss
+	else if ((timer.Run.CategoryName == "Hero Story" || timer.Run.CategoryName == "Dark Story") && current.stageID == 42)
 	{
-		if (current.timerEnd && !old.timerEnd)
+		if (current.bossHealth == 0 && current.timerEnd && !old.timerEnd)
 		{
-			vars.splitDelay = 3;
+			vars.splitDelay = 1;
 		}
 	}
-	//Kart stages
-	else if (current.stageID == 71 || current.stageID == 70)
+	else if ((timer.Run.CategoryName == "Last Story" || timer.Run.CategoryName == "All Stories") && current.stageID == 66)
 	{
-		if (current.timerEnd && !old.timerEnd && current.controlActive && current.menuMode != 12)
+		if (current.levelEnd && !old.levelEnd)
+		{
+			vars.splitDelay = 1;
+		}
+	}
+	//Boss stages
+	else if ((current.stageID == 42 || current.stageID == 33 || current.stageID == 29 || current.stageID == 20 || current.stageID == 19) && current.bossHealth == 0)
+	{
+		if (current.timerEnd && !old.timerEnd)
 		{
 			vars.splitDelay = 3;
 		}
@@ -178,6 +186,14 @@ update
 	else if ((settings["cannonsCore"]) && (current.stageID == 38 || current.stageID == 37 || current.stageID == 36 || current.stageID == 35))
 	{
 		if (current.controlActive && current.levelEnd && !old.levelEnd)
+		{
+			vars.splitDelay = 3;
+		}
+	}
+	//Kart stages
+	else if (current.stageID == 71 || current.stageID == 70)
+	{
+		if (current.timerEnd && !old.timerEnd && current.controlActive && current.menuMode != 12)
 		{
 			vars.splitDelay = 3;
 		}
@@ -207,12 +223,12 @@ update
 
 start
 {
-	vars.totalTime = 0;
 	vars.timestopFrames = 0;
-	vars.lastGoodTimerVal = current.levelTimerClone;
 	vars.splitDelay = 0;
 	vars.countFrames = false;
-	if ((timer.Run.CategoryName != "Any%" && current.currMenuState != 4 && current.currMenuState != 5 && current.currMenuState != 7) || 
+	//Allow Any% and 2 Player Levels to start where other categories can't
+	if ((timer.Run.CategoryName != "Any%" && timer.Run.CategoryName != "2 Player Levels" && 
+	current.currMenuState != 4 && current.currMenuState != 5 && current.currMenuState != 7) || 
 	current.inEmblem || current.inAMV)
 	{
 		return false;
@@ -231,6 +247,15 @@ start
 	{
 		if (current.mainMenu1 != 1 && current.mainMenu2 != 1 && current.stageSelect != 1 && (current.stageID == 90 || current.currMenu == 5) && 
 		current.runStart && current.nowLoading && !old.nowLoading)
+		{
+			return true;
+		}
+	}
+	//2p Levels
+	else if (timer.Run.CategoryName == "2 Player Levels")
+	{
+		if (current.currMenu == 16 && ((current.menuMode == 1 && old.menuMode != 1) || 
+		(!current.nowLoading && old.nowLoading)) && current.runStart)
 		{
 			return true;
 		}
