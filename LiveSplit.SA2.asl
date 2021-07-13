@@ -223,6 +223,7 @@ update
 
 start
 {
+	vars.totalTime = 0;
 	vars.timestopFrames = 0;
 	vars.splitDelay = 0;
 	vars.countFrames = false;
