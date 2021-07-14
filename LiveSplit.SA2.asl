@@ -1,4 +1,4 @@
-//Variant 1, Version 4.1
+//Variant 1, Version 4.20
 //By ShiningFace, Jelly, IDGeek
 
 state("sonic2app")
@@ -75,7 +75,6 @@ startup
 	settings.Add("cannonsCore", false, "Only split in Cannon's Core when a mission is completed.");
 	settings.Add("bossRush", false, "Only split in Boss Rush when defeating the last boss of a story.");
 	settings.Add("chaoRace", false, "Split when exiting a Chao Race.");
-	settings.Add("emblemTiming", false, "Include timing for emblem cutscenes outside of 180/171 emblems.");
 }
 
 update
@@ -85,15 +84,6 @@ update
 	{
 		vars.countFrames = false;
 	}
-	//Counts emblem cutscene if a specified category
-	//else if (((settings["emblemTiming"]) || timer.Run.CategoryName == "180 Emblems" || timer.Run.CategoryName == "171 Emblems") && current.inEmblem)
-	//{
-	//	if (!current.nowLoading)
-	//	{
-	//		vars.countFrames = true;
-	//	}
-	//	else vars.countFrames = false;
-	//}
 	//Loading, saving, and cutscenes
 	else if (current.saveChao == 1 || current.inCutscene || current.inEmblem || current.nowLoading || 
 	(current.mainMenu1 == 1 && current.currMenu == 24 && current.currMenuState == 13) || 
@@ -111,7 +101,9 @@ update
 	}
 	//Normal stages
 	else if ((current.mainMenu1 == 0 && current.mainMenu2 == 0 && current.stageSelect == 0 && current.storyRecap == 0 && current.twoplayerMenu == 0 && 
-	(current.levelEnd || (current.menuMode == 0 && !current.levelEnd))) || (current.menuMode != 0 && current.timerEnd))
+	(current.levelEnd || (current.menuMode == 0 && !current.levelEnd))) || 
+	(current.stageID == 90 && !current.controlActive && (current.menuMode == 7 || old.menuMode == 7 || current.menuMode == 12 || old.menuMode == 12)) || 
+	(current.stageID != 90 && current.menuMode != 0 && current.timerEnd))
 	{
 		vars.countFrames = false;
 	}
