@@ -1,4 +1,4 @@
-//This is version 3
+//Variant 1, Version 4.1
 //By ShiningFace, Jelly, IDGeek
 
 state("sonic2app")
@@ -26,15 +26,13 @@ state("sonic2app")
 	byte mainMenu2        : 0x0197BAE0;
 	byte stageSelect      : 0x0191BEAC;
 	byte storyRecap       : 0x0191C1AC;
-	byte pauseCutscene    : 0x019CFF00;
+	byte inlevelCutscene  : 0x019D0F9C;
 	byte gameplayPause    : 0x021F0014;
 
 	short currEmblems     : 0x01536296;
 	short currEvent       : 0x01628AF4;
-	//Get minutes, seconds, and centiseconds all in one read
-	int levelTimer        : 0x015457F8;
-	int levelTimerClone   : 0x0134AFDB;
 	
+	int levelTimer        : 0x015457F8;
 	int frameCount        : 0x0134B038;
 
 	float bossHealth      : 0x019E9604, 0x48;
@@ -52,11 +50,11 @@ init
        		"This game uses Game Time (IGT) as the main timing method.\n"+
     		"LiveSplit is currently set to display Real Time (RTA).\n"+
     		"Would you like to set the timing method to Game Time?",
-       	 	"Sonic Adventure 2: Battle | LiveSplit",
+       		"Sonic Adventure 2: Battle | LiveSplit",
        		MessageBoxButtons.YesNo,MessageBoxIcon.Question
        	);
 		
-        if (timingMessage == DialogResult.Yes) 
+		if (timingMessage == DialogResult.Yes) 
 		{
 			timer.CurrentTimingMethod = TimingMethod.GameTime;
         }
@@ -67,15 +65,13 @@ startup
 {
 	refreshRate = 120;
 	//Variables
-	vars.totalTime = 0;      //Time accumulated from level timer, in centiseconds
-	vars.timestopFrames = 0; //How many additional frames we added due to timestop
-	vars.lastGoodTimerVal = Int32.MaxValue;
+	vars.timestopFrames = 0; //How many frames have elapsed
 	vars.splitDelay = 0;
 	//Settings
 	settings.Add("timerPopup", false, "Ask to switch to IGT on startup.");
 	settings.Add("storyStart", false, "Only start timer when starting a story.");
 	settings.Add("stageExit", false, "Restart timer upon manually exiting a stage in stage select.");
-	settings.Add("resetIL", false, "Restart timer upon restart/death for ILs.");
+	settings.Add("resetIL", false, "Restart timer upon restart/death (Only activate for ILs).");
 	settings.Add("cannonsCore", false, "Only split in Cannon's Core when a mission is completed.");
 	settings.Add("bossRush", false, "Only split in Boss Rush when defeating the last boss of a story.");
 	settings.Add("chaoRace", false, "Split when exiting a Chao Race.");
@@ -84,73 +80,47 @@ startup
 
 update
 {
-	//Counts emblem cutscene if a specified category
-	if ((settings["emblemTiming"]) && current.inEmblem)
-	{
-		if (!current.nowLoading)
-		{
-			vars.countFrames = true;
-		}
-		else vars.countFrames = false;
-	}
-	//Cannons Core
-	else if (current.stageID == 34 || current.stageID == 35 || current.stageID == 36 || current.stageID == 37 || current.stageID == 38)
-	{
-		if (current.timestop == 2) //Count time by frames on timestop
-		{
-			vars.countFrames = true;
-		}
-		else
-		{
-			vars.countFrames = false; //Not timestop? - don't count frames
-		}
-
-		if (current.menuMode == 17) //Don't count frames when pause menu open
-		{
-			vars.countFrames = false;
-		}
-
-		if (current.timerEnd) //Pause timer when dying/restarting/finishing level while timestop is active
-		{
-			vars.countFrames = false;
-		}
-	}
-	//Don't count time by frames anywhere else but cannons core
-	else
+	//Pauses timer when livesplit is paused
+	if (timer.CurrentPhase == TimerPhase.Paused)
 	{
 		vars.countFrames = false;
 	}
+	//Counts emblem cutscene if a specified category
+	//else if (((settings["emblemTiming"]) || timer.Run.CategoryName == "180 Emblems" || timer.Run.CategoryName == "171 Emblems") && current.inEmblem)
+	//{
+	//	if (!current.nowLoading)
+	//	{
+	//		vars.countFrames = true;
+	//	}
+	//	else vars.countFrames = false;
+	//}
+	//Loading, saving, and cutscenes
+	else if (current.saveChao == 1 || current.inCutscene || current.inEmblem || current.nowLoading || 
+	(current.mainMenu1 == 1 && current.currMenu == 24 && current.currMenuState == 13) || 
+	(current.mainMenu1 == 0 && current.mainMenu2 == 0 && current.stageSelect == 0 && current.storyRecap == 0 && current.twoplayerMenu == 0 && 
+	((current.stageID != 66 && current.stageID != 65 && current.inlevelCutscene == 14) || 
+	(current.gameplayPause == 117 || current.gameplayPause == 123) && (current.levelTimer == old.levelTimer))))
+	{
+		vars.countFrames = false;
+	}
+	//Credits
+	else if ((current.currEvent == 211 || current.currEvent == 210 || current.currEvent == 208 || 
+	current.currEvent == 131 || current.currEvent == 28) && !current.inCutscene)
+	{
+		vars.countFrames = false;
+	}
+	//Normal stages
+	else if ((current.mainMenu1 == 0 && current.mainMenu2 == 0 && current.stageSelect == 0 && current.storyRecap == 0 && current.twoplayerMenu == 0 && 
+	(current.levelEnd || (current.menuMode == 0 && !current.levelEnd))) || (current.menuMode != 0 && current.timerEnd))
+	{
+		vars.countFrames = false;
+	}
+	else vars.countFrames = true;
 	
 	if (vars.countFrames)
 	{
-		int diff = current.frameCount - old.frameCount;
-		vars.timestopFrames = vars.timestopFrames+diff;
-	}
-	//Ensure we have accurate readings of the IGT
-	if ((current.levelTimer & 0xFFFFFF) == (current.levelTimerClone & 0xFFFFFF))
-	{
-		int currMinutes =    (current.levelTimer >> 0)  & 0xFF;
-		int currSeconds =    (current.levelTimer >> 8)  & 0xFF;
-		int currCentis  =    (current.levelTimer >> 16) & 0xFF;
-
-		int oldMinutes  = (vars.lastGoodTimerVal >> 0)  & 0xFF;
-		int oldSeconds  = (vars.lastGoodTimerVal >> 8)  & 0xFF;
-		int oldCentis   = (vars.lastGoodTimerVal >> 16) & 0xFF;
-
-		currCentis = (int)Math.Ceiling(currCentis*(5.0/3.0));
-		oldCentis  =  (int)Math.Ceiling(oldCentis*(5.0/3.0));
-		//In game timer converted to centiseconds
-		int inGameTime  = (currMinutes*6000) + (currSeconds*100) + (currCentis);
-		int oldGameTime =  (oldMinutes*6000) +  (oldSeconds*100) +  (oldCentis);
-		//Only add positive time
-		int timeToAdd = Math.Max(0, inGameTime-oldGameTime);
-		//Don't add time when the timer goes beserk in loading screens
-		if (current.controlActive)
-		{
-			vars.totalTime += timeToAdd;
-		}
-
-		vars.lastGoodTimerVal = current.levelTimer;
+		int timeToAdd = Math.Max(0, current.frameCount - old.frameCount);
+		vars.timestopFrames += timeToAdd;
 	}
 	//Splitting
 	vars.splitDelay = Math.Max(0, vars.splitDelay-1);
@@ -223,7 +193,6 @@ update
 
 start
 {
-	vars.totalTime = 0;
 	vars.timestopFrames = 0;
 	vars.splitDelay = 0;
 	vars.countFrames = false;
@@ -314,5 +283,5 @@ isLoading
 
 gameTime
 {
-	return TimeSpan.FromMilliseconds(vars.timestopFrames*1000.0/60.0 + vars.totalTime*10.0);
+	return TimeSpan.FromMilliseconds(vars.timestopFrames*1000.0/60.0);
 }
