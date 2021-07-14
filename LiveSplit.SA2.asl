@@ -85,7 +85,7 @@ update
 		vars.countFrames = false;
 	}
 	//Loading, saving, and cutscenes
-	else if (current.saveChao == 1 || current.inCutscene || current.inEmblem || current.nowLoading || 
+	else if (current.inCutscene || current.inEmblem || current.nowLoading || current.saveChao == 1 || old.saveChao == 1 || 
 	(current.mainMenu1 == 1 && current.currMenu == 24 && current.currMenuState == 13) || 
 	(current.mainMenu1 == 0 && current.mainMenu2 == 0 && current.stageSelect == 0 && current.storyRecap == 0 && current.twoplayerMenu == 0 && 
 	((current.stageID != 66 && current.stageID != 65 && current.inlevelCutscene == 14) || 
@@ -100,10 +100,11 @@ update
 		vars.countFrames = false;
 	}
 	//Normal stages
-	else if ((current.mainMenu1 == 0 && current.mainMenu2 == 0 && current.stageSelect == 0 && current.storyRecap == 0 && current.twoplayerMenu == 0 && 
-	(current.levelEnd || (current.menuMode == 0 && !current.levelEnd))) || 
-	(current.stageID == 90 && !current.controlActive && (current.menuMode == 7 || old.menuMode == 7 || current.menuMode == 12 || old.menuMode == 12)) || 
-	(current.stageID != 90 && current.menuMode != 0 && current.timerEnd))
+	else if (current.mainMenu1 == 0 && current.mainMenu2 == 0 && current.stageSelect == 0 && current.storyRecap == 0 && current.twoplayerMenu == 0 && 
+	(current.levelEnd || (current.menuMode == 0 && !current.levelEnd) || 
+	(current.stageID == 90 && !current.controlActive && 
+	(current.menuMode == 29 || old.menuMode == 29 || current.menuMode == 12 || old.menuMode == 12 || current.menuMode == 8 || old.menuMode == 8 || current.menuMode == 7 || old.menuMode == 7)) || 
+	(current.stageID != 90 && current.menuMode != 0 && current.timerEnd)))
 	{
 		vars.countFrames = false;
 	}
