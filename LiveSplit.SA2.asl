@@ -65,7 +65,7 @@ startup
 {
 	refreshRate = 120;
 	//Variables
-	vars.timestopFrames = 0; //How many frames have elapsed
+	vars.countedFrames = 0; //How many frames have elapsed
 	vars.splitDelay = 0;
 	//Settings
 	settings.Add("timerPopup", false, "Ask to switch to IGT on startup.");
@@ -113,7 +113,7 @@ update
 	if (vars.countFrames)
 	{
 		int timeToAdd = Math.Max(0, current.frameCount - old.frameCount);
-		vars.timestopFrames += timeToAdd;
+		vars.countedFrames += timeToAdd;
 	}
 	//Splitting
 	vars.splitDelay = Math.Max(0, vars.splitDelay-1);
@@ -186,7 +186,7 @@ update
 
 start
 {
-	vars.timestopFrames = 0;
+	vars.countedFrames = 0;
 	vars.splitDelay = 0;
 	vars.countFrames = false;
 	//Allow Any% and 2 Player Levels to start where other categories can't
@@ -276,5 +276,5 @@ isLoading
 
 gameTime
 {
-	return TimeSpan.FromMilliseconds(vars.timestopFrames*5.0/0.3);
+	return TimeSpan.FromMilliseconds(vars.countedFrames*5.0/0.3);
 }
