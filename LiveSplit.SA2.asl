@@ -80,7 +80,7 @@ startup
 
 update
 {
-	vars.intRound = (int)Math.Round(current.frameCount*1000.0/60.0);
+	vars.intRound = (int)Math.Ceiling(current.frameCount*1000.0/60.0);
 	current.frameTimer = vars.intRound;
 	//Pauses timer when livesplit is paused
 	if (timer.CurrentPhase == TimerPhase.Paused)
