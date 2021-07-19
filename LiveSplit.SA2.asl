@@ -66,6 +66,7 @@ startup
 	refreshRate = 120;
 	//Variables
 	vars.timestopFrames = 0; //How many frames have elapsed
+	vars.intRound = 0;
 	vars.splitDelay = 0;
 	//Settings
 	settings.Add("timerPopup", false, "Ask to switch to IGT on startup.");
@@ -79,6 +80,8 @@ startup
 
 update
 {
+	vars.intRound = (int)Math.Ceiling(current.frameCount*1000.0/60.0);
+	current.frameTimer = vars.intRound;
 	//Pauses timer when livesplit is paused
 	if (timer.CurrentPhase == TimerPhase.Paused)
 	{
@@ -101,7 +104,7 @@ update
 	}
 	//Normal stages
 	else if (current.mainMenu1 == 0 && current.mainMenu2 == 0 && current.stageSelect == 0 && current.storyRecap == 0 && current.twoplayerMenu == 0 && 
-	(current.levelEnd || (current.menuMode == 0 && !current.levelEnd) || 
+	((current.levelEnd && old.levelEnd) || (current.menuMode == 0 && !current.levelEnd) || 
 	(current.stageID == 90 && !current.controlActive && 
 	(current.menuMode == 29 || old.menuMode == 29 || current.menuMode == 12 || old.menuMode == 12 || current.menuMode == 8 || old.menuMode == 8 || current.menuMode == 7 || old.menuMode == 7)) || 
 	(current.stageID != 90 && current.menuMode != 0 && current.timerEnd)))
@@ -112,7 +115,7 @@ update
 	
 	if (vars.countFrames)
 	{
-		int timeToAdd = Math.Max(0, current.frameCount - old.frameCount);
+		int timeToAdd = Math.Max(0, current.frameTimer - old.frameTimer);
 		vars.timestopFrames += timeToAdd;
 	}
 	//Splitting
@@ -187,6 +190,7 @@ update
 start
 {
 	vars.timestopFrames = 0;
+	vars.intRound = 0;
 	vars.splitDelay = 0;
 	vars.countFrames = false;
 	//Allow Any% and 2 Player Levels to start where other categories can't
@@ -276,5 +280,5 @@ isLoading
 
 gameTime
 {
-	return TimeSpan.FromMilliseconds(vars.timestopFrames*1000.0/60.0);
+	return TimeSpan.FromMilliseconds(vars.timestopFrames);
 }
