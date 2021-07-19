@@ -66,7 +66,6 @@ startup
 	refreshRate = 120;
 	//Variables
 	vars.timestopFrames = 0; //How many frames have elapsed
-	vars.intRound = 0;
 	vars.splitDelay = 0;
 	//Settings
 	settings.Add("timerPopup", false, "Ask to switch to IGT on startup.");
@@ -80,8 +79,6 @@ startup
 
 update
 {
-	vars.intRound = (int)Math.Ceiling(current.frameCount*1000.0/60.0);
-	current.frameTimer = vars.intRound;
 	//Pauses timer when livesplit is paused
 	if (timer.CurrentPhase == TimerPhase.Paused)
 	{
@@ -115,7 +112,7 @@ update
 	
 	if (vars.countFrames)
 	{
-		int timeToAdd = Math.Max(0, current.frameTimer - old.frameTimer);
+		int timeToAdd = Math.Max(0, current.frameCount - old.frameCount);
 		vars.timestopFrames += timeToAdd;
 	}
 	//Splitting
@@ -190,7 +187,6 @@ update
 start
 {
 	vars.timestopFrames = 0;
-	vars.intRound = 0;
 	vars.splitDelay = 0;
 	vars.countFrames = false;
 	//Allow Any% and 2 Player Levels to start where other categories can't
@@ -280,5 +276,5 @@ isLoading
 
 gameTime
 {
-	return TimeSpan.FromMilliseconds(vars.timestopFrames);
+	return TimeSpan.FromMilliseconds(vars.timestopFrames*5.0/0.3);
 }
