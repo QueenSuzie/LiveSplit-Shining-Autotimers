@@ -1,4 +1,4 @@
-//Variant 1, Version 4.20
+//Variant 1, Version 4.20.69
 //By ShiningFace, Jelly, IDGeek
 
 state("sonic2app")
@@ -94,8 +94,8 @@ update
 		vars.countFrames = false;
 	}
 	//Credits
-	else if ((current.currEvent == 211 || current.currEvent == 210 || current.currEvent == 208 || 
-	current.currEvent == 131 || current.currEvent == 28) && !current.inCutscene)
+	else if (current.mainMenu1 == 0 && current.mainMenu2 == 0 && current.stageSelect == 0 && current.storyRecap == 0 && current.twoplayerMenu == 0 && 
+	(current.currEvent == 211 || current.currEvent == 210 || current.currEvent == 208 || current.currEvent == 131 || current.currEvent == 28))
 	{
 		vars.countFrames = false;
 	}
