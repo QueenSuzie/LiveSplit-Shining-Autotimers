@@ -1,4 +1,4 @@
-//Variant 1, Version 4.20.69
+//Version 4.20.69
 //By ShiningFace, Jelly, IDGeek
 
 state("sonic2app")
@@ -14,6 +14,7 @@ state("sonic2app")
 	
 	byte bossRush         : 0x00877DC4;
 	byte timestop         : 0x0134AFF7;
+	byte ringSaving       : 0x015455DC;
 	byte stageID          : 0x01534B70;
 	byte menuMode         : 0x01534BE0;
 	byte timesRestarted   : 0x01534BE8;
@@ -85,9 +86,10 @@ update
 		vars.countFrames = false;
 	}
 	//Loading, saving, and cutscenes
-	else if (current.inCutscene || current.inEmblem || current.nowLoading || current.saveChao == 1 || old.saveChao == 1 || 
+	else if (current.inCutscene || current.inEmblem || current.nowLoading || current.saveChao == 1 || old.saveChao == 1 || current.ringSaving == 4 || old.ringSaving == 4 || 
 	(current.mainMenu1 == 1 && current.currMenu == 24 && current.currMenuState == 13) || 
 	(current.mainMenu1 == 0 && current.mainMenu2 == 0 && current.stageSelect == 0 && current.storyRecap == 0 && current.twoplayerMenu == 0 && 
+	timer.Run.CategoryName != "Knuckles Centurion" && timer.Run.CategoryName != "Knuckles stages x20" && timer.Run.CategoryName != "Rouge Centurion" && timer.Run.CategoryName != "Rouge Stages x25" && 
 	((current.stageID != 66 && current.stageID != 65 && current.inlevelCutscene == 14) || 
 	(current.gameplayPause == 117 || current.gameplayPause == 123) && (current.levelTimer == old.levelTimer))))
 	{
@@ -101,6 +103,7 @@ update
 	}
 	//Normal stages
 	else if (current.mainMenu1 == 0 && current.mainMenu2 == 0 && current.stageSelect == 0 && current.storyRecap == 0 && current.twoplayerMenu == 0 && 
+	timer.Run.CategoryName != "Knuckles Centurion" && timer.Run.CategoryName != "Knuckles stages x20" && timer.Run.CategoryName != "Rouge Centurion" && timer.Run.CategoryName != "Rouge Stages x25" && 
 	((current.levelEnd && old.levelEnd) || (current.menuMode == 0 && !current.levelEnd) || 
 	(current.stageID == 90 && !current.controlActive && 
 	(current.menuMode == 29 || old.menuMode == 29 || current.menuMode == 12 || old.menuMode == 12 || current.menuMode == 8 || old.menuMode == 8 || current.menuMode == 7 || old.menuMode == 7)) || 
