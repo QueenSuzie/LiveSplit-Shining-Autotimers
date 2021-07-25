@@ -86,7 +86,8 @@ update
 		vars.countFrames = false;
 	}
 	//Loading, saving, and cutscenes
-	else if (current.inCutscene || current.inEmblem || current.nowLoading || current.saveChao == 1 || old.saveChao == 1 || current.ringSaving == 4 || old.ringSaving == 4 || 
+	else if (current.inCutscene || current.inEmblem || current.nowLoading || current.saveChao == 1 || old.saveChao == 1 || 
+        ((current.levelEnd && old.levelEnd) && (current.ringSaving == 4 || old.ringSaving == 4)) || 
 	(current.mainMenu1 == 1 && current.currMenu == 24 && current.currMenuState == 13) || 
 	(current.mainMenu1 == 0 && current.mainMenu2 == 0 && current.stageSelect == 0 && current.storyRecap == 0 && current.twoplayerMenu == 0 && 
 	timer.Run.CategoryName != "Knuckles Centurion" && timer.Run.CategoryName != "Knuckles stages x20" && timer.Run.CategoryName != "Rouge Centurion" && timer.Run.CategoryName != "Rouge stages x25" && 
