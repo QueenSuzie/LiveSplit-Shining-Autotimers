@@ -71,6 +71,7 @@ startup
 	//Settings
 	settings.Add("timerPopup", false, "Ask to switch to IGT on startup.");
 	settings.Add("storyStart", false, "Only start timer when starting a story.");
+	settings.Add("huntingTimer", false, "Allow the use of v2.5 loadless if category is set improperly.");
 	settings.Add("stageExit", false, "Restart timer upon manually exiting a stage in stage select.");
 	settings.Add("resetIL", false, "Restart timer upon restart/death (Only activate for ILs).");
 	settings.Add("cannonsCore", false, "Only split in Cannon's Core when a mission is completed.");
@@ -103,7 +104,7 @@ update
 		vars.countFrames = false;
 	}
 	//Normal stages
-	else if (current.mainMenu1 == 0 && current.mainMenu2 == 0 && current.stageSelect == 0 && current.storyRecap == 0 && current.twoplayerMenu == 0 && 
+	else if (current.mainMenu1 == 0 && current.mainMenu2 == 0 && current.stageSelect == 0 && current.storyRecap == 0 && current.twoplayerMenu == 0 && (!settings["huntingTimer"]) &&
 	timer.Run.CategoryName != "Knuckles Centurion" && timer.Run.CategoryName != "Knuckles stages x20" && timer.Run.CategoryName != "Rouge Centurion" && timer.Run.CategoryName != "Rouge stages x25" && 
 	((current.levelEnd && old.levelEnd) || (current.menuMode == 0 && !current.levelEnd) || 
 	(current.stageID == 90 && !current.controlActive && 
