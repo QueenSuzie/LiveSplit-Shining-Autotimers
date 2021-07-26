@@ -48,9 +48,9 @@ init
 	{        
     	var timingMessage = MessageBox.Show
 		(
-       		"This game uses Game Time (IGT) as the main timing method.\n"+
+       		"This game uses Loadless as the main timing method.\n"+
     		"LiveSplit is currently set to display Real Time (RTA).\n"+
-    		"Would you like to set the timing method to Game Time?",
+    		"Would you like to set the timing method to Loadless?",
        		"Sonic Adventure 2: Battle | LiveSplit",
        		MessageBoxButtons.YesNo,MessageBoxIcon.Question
        	);
@@ -69,7 +69,7 @@ startup
 	vars.countedFrames = 0; //How many frames have elapsed
 	vars.splitDelay = 0;
 	//Settings
-	settings.Add("timerPopup", false, "Ask to switch to IGT on startup.");
+	settings.Add("timerPopup", false, "Ask to switch to Loadless on startup.");
 	settings.Add("storyStart", false, "Only start timer when starting a story.");
 	settings.Add("huntingTimer", false, "Allow the use of v2.5 loadless if category is set improperly.");
 	settings.Add("stageExit", false, "Restart timer upon manually exiting a stage in stage select.");
