@@ -1,7 +1,48 @@
-//Version 4.23
+//Version 4.24
 //By ShiningFace, Jelly, IDGeek
 
 state("sonic2app")
+{
+	bool timerEnd         : 0x0134AFDA;
+	bool runStart         : 0x0134AFFA;
+	bool controlActive    : 0x0134AFFE;
+	bool levelEnd         : 0x0134B002;
+	bool inCutscene       : 0x015420F8;
+	bool nowLoading       : 0x016557E4;
+	bool inAMV            : 0x016EDE28;
+	bool inEmblem         : 0x01919BE0;
+	
+	byte bossRush         : 0x00877DC4;
+	byte timestop         : 0x0134AFF7;
+	byte ringSaving       : 0x015455DC;
+	byte stageID          : 0x01534B70;
+	byte menuMode         : 0x01534BE0;
+	byte timesRestarted   : 0x01534BE8;
+	byte saveChao         : 0x015F645C;
+	byte chaoID           : 0x0165A2CC;
+	byte textCutscene     : 0x016EFD44;
+	byte raceChao         : 0x019D2784;
+	byte twoplayerMenu    : 0x0191B88C;
+	byte mainMenu1        : 0x0191BD2C;
+	byte mainMenu2        : 0x0197BAE0;
+	byte stageSelect      : 0x0191BEAC;
+	byte storyRecap       : 0x0191C1AC;
+	byte inlevelCutscene  : 0x019D0F9C;
+	byte gameplayPause    : 0x021F0014;
+
+	short currEmblems     : 0x01536296;
+	short currEvent       : 0x01628AF4;
+	
+	int levelTimer        : 0x015457F8;
+	int frameCount        : 0x0134B038;
+
+	float bossHealth      : 0x019E9604, 0x48;
+	
+	int currMenu          : 0x0197BB10;
+	int currMenuState     : 0x0197BB14;
+}
+
+state("Launcher")
 {
 	bool timerEnd         : 0x0134AFDA;
 	bool runStart         : 0x0134AFFA;
