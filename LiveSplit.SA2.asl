@@ -1,4 +1,4 @@
-//Version 4.24
+//Version 5
 //By ShiningFace, Jelly, IDGeek
 
 state("sonic2app")
@@ -32,7 +32,9 @@ state("sonic2app")
 
 	short currEmblems     : 0x01536296;
 	short currEvent       : 0x01628AF4;
-	
+	//Timing
+	int levelTimer        : 0x015457F8;
+	int levelTimerClone   : 0x0134AFDB;
 	int levelTimer        : 0x015457F8;
 	int frameCount        : 0x0134B038;
 
@@ -73,7 +75,9 @@ state("Launcher")
 
 	short currEmblems     : 0x01536296;
 	short currEvent       : 0x01628AF4;
-	
+	//Timing
+	int levelTimer        : 0x015457F8;
+	int levelTimerClone   : 0x0134AFDB;
 	int levelTimer        : 0x015457F8;
 	int frameCount        : 0x0134B038;
 
@@ -107,7 +111,9 @@ startup
 {
 	refreshRate = 120;
 	//Variables
+	vars.totalTime = 0;     //Time accumulated from level timer, in centiseconds
 	vars.countedFrames = 0; //How many frames have elapsed
+	vars.lastGoodTimerVal = Int32.MaxValue;
 	vars.splitDelay = 0;
 	//Settings
 	settings.Add("timerPopup", false, "Ask to switch to Loadless on startup.");
@@ -144,11 +150,11 @@ update
 		vars.countFrames = false;
 	}
 	//Normal stages
-	else if (current.mainMenu1 == 0 && current.stageSelect == 0 && current.storyRecap == 0 && current.twoplayerMenu == 0 && current.currMenuState != 2 && (!settings["huntingTimer"]) &&
-	timer.Run.CategoryName != "Knuckles Centurion" && timer.Run.CategoryName != "Knuckles stages x20" && timer.Run.CategoryName != "Rouge Centurion" && timer.Run.CategoryName != "Rouge stages x25" && 
-	((current.levelEnd && old.levelEnd) || (current.menuMode == 0 && !current.levelEnd) || (current.stageID == 90 && !current.controlActive && 
+	else if (current.mainMenu1 == 0 && current.stageSelect == 0 && current.storyRecap == 0 && current.twoplayerMenu == 0 && current.currMenuState != 2 && (!settings["huntingTimer"]) && 
+	timer.Run.CategoryName != "Knuckles Centurion" && timer.Run.CategoryName != "Knuckles stages x20" && -imer.Run.CategoryName != "Rouge Centurion" && timer.Run.CategoryName != "Rouge stages x25" && 
+	(current.levelEnd || (current.menuMode == 0 && !current.levelEnd) || (current.stageID == 90 && !current.controlActive && 
 	(current.menuMode == 29 || old.menuMode == 29 || current.menuMode == 12 || old.menuMode == 12 || current.menuMode == 8 || old.menuMode == 8 || current.menuMode == 7 || old.menuMode == 7)) || 
-	(current.stageID != 90 && current.menuMode != 0 && current.timerEnd)))
+	(current.stageID != 90 && current.menuMode != 0 && current.timerEnd)) || (current.menuMode == 16 && current.controlActive && !current.levelEnd))
 	{
 		vars.countFrames = false;
 	}
@@ -158,6 +164,32 @@ update
 	{
 		int timeToAdd = Math.Max(0, current.frameCount - old.frameCount);
 		vars.countedFrames += timeToAdd;
+	}
+	//Ensure we have accurate readings of the IGT
+	if ((current.levelTimer & 0xFFFFFF) == (current.levelTimerClone & 0xFFFFFF))
+	{
+		int currMinutes =    (current.levelTimer >> 0)  & 0xFF;
+		int currSeconds =    (current.levelTimer >> 8)  & 0xFF;
+		int currCentis  =    (current.levelTimer >> 16) & 0xFF;
+
+		int oldMinutes  = (vars.lastGoodTimerVal >> 0)  & 0xFF;
+		int oldSeconds  = (vars.lastGoodTimerVal >> 8)  & 0xFF;
+		int oldCentis   = (vars.lastGoodTimerVal >> 16) & 0xFF;
+
+		currCentis = (int)Math.Ceiling(currCentis*(5.0/3.0));
+		oldCentis  =  (int)Math.Ceiling(oldCentis*(5.0/3.0));
+		//In game timer converted to centiseconds
+		int inGameTime  = (currMinutes*6000) + (currSeconds*100) + (currCentis);
+		int oldGameTime =  (oldMinutes*6000) +  (oldSeconds*100) +  (oldCentis);
+		//Only add positive time
+		int timeToAdd = Math.Max(0, inGameTime-oldGameTime);
+		//Don't add time when the timer goes beserk in loading screens
+		if (current.controlActive)
+		{
+			vars.totalTime += timeToAdd;
+		}
+
+		vars.lastGoodTimerVal = current.levelTimer;
 	}
 	//Splitting
 	vars.splitDelay = Math.Max(0, vars.splitDelay-1);
@@ -170,13 +202,6 @@ update
 	else if ((timer.Run.CategoryName == "Hero Story" || timer.Run.CategoryName == "Dark Story") && current.stageID == 42)
 	{
 		if (current.bossHealth == 0 && current.timerEnd && !old.timerEnd)
-		{
-			vars.splitDelay = 1;
-		}
-	}
-	else if ((timer.Run.CategoryName == "Last Story" || timer.Run.CategoryName == "All Stories") && current.stageID == 66)
-	{
-		if (current.levelEnd && !old.levelEnd)
 		{
 			vars.splitDelay = 1;
 		}
@@ -209,27 +234,28 @@ update
 	else if (((settings["chaoRace"]) && current.stageID == 90 && current.raceChao != 1 && old.raceChao == 1) || 
 	(current.stageID == 90 && current.chaoID == 1 && current.inEmblem && !old.inEmblem))
 	{
-		vars.splitDelay = 3;
+		vars.splitDelay = 1;
 	}
 	//180 Emblems
 	else if (timer.Run.CategoryName == "180 Emblems" && current.currEmblems == 180 && old.currEmblems != 180)
 	{
-		vars.splitDelay = 3;
+		vars.splitDelay = 1;
 	}
 	//171 Emblems
 	else if (timer.Run.CategoryName == "171 Emblems" && current.currEmblems == 171 && old.currEmblems != 171)
 	{
-		vars.splitDelay = 3;
+		vars.splitDelay = 1;
 	}
 	//Normal stages
 	else if (current.levelEnd && !old.levelEnd)
 	{
-		vars.splitDelay = 3;
+		vars.splitDelay = 1;
 	}
 }
 
 start
 {
+	vars.totalTime = 0;
 	vars.countedFrames = 0;
 	vars.splitDelay = 0;
 	vars.countFrames = false;
@@ -320,5 +346,5 @@ isLoading
 
 gameTime
 {
-	return TimeSpan.FromMilliseconds(vars.countedFrames*5.0/0.3);
+	return TimeSpan.FromMilliseconds(vars.countedFrames*5.0/0.3 + vars.totalTime*10.0);
 }
