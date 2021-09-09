@@ -1,4 +1,4 @@
-//Version 5
+//Version 5.1
 //By ShiningFace, Jelly, IDGeek
 
 state("sonic2app")
@@ -150,11 +150,12 @@ update
 		vars.countFrames = false;
 	}
 	//Normal stages
-	else if (current.mainMenu1 == 0 && current.stageSelect == 0 && current.storyRecap == 0 && current.twoplayerMenu == 0 && current.currMenuState != 2 && (!settings["huntingTimer"]) && 
-	timer.Run.CategoryName != "Knuckles Centurion" && timer.Run.CategoryName != "Knuckles stages x20" && timer.Run.CategoryName != "Rouge Centurion" && timer.Run.CategoryName != "Rouge stages x25" && 
+	else if (current.mainMenu1 == 0 && current.stageSelect == 0 && current.storyRecap == 0 && current.twoplayerMenu == 0 && current.currMenuState != 2 && 
+	((current.menuMode == 16 && current.controlActive && !current.levelEnd && !current.timerEnd) || ((!settings["huntingTimer"]) && 
+	timer.Run.CategoryName != "Knuckles Centurion" && timer.Run.CategoryName != "Knuckles stages x20" && timer.Run.CategoryName != "Rouge Centurion" && timer.Run.CategoryName != "Rouge stages x25" &&
 	(current.levelEnd || (current.menuMode == 0 && !current.levelEnd) || (current.stageID == 90 && !current.controlActive && 
-	(current.menuMode == 29 || old.menuMode == 29 || current.menuMode == 12 || old.menuMode == 12 || current.menuMode == 8 || old.menuMode == 8 || current.menuMode == 7 || old.menuMode == 7)) || 
-	(current.stageID != 90 && current.menuMode != 0 && current.timerEnd)) || (current.menuMode == 16 && current.controlActive && !current.levelEnd))
+	(current.menuMode == 29 || old.menuMode == 29 || current.menuMode == 12 || old.menuMode == 12 || current.menuMode == 8 || old.menuMode == 8 || current.menuMode == 7 || old.menuMode == 7)) ||  
+	(current.stageID != 90 && current.menuMode != 0 && current.timerEnd)))))
 	{
 		vars.countFrames = false;
 	}
