@@ -95,7 +95,7 @@ init
 		(
        		"This game uses Loadless as the main timing method.\n"+
     		"LiveSplit is currently set to display IGT via options.\n"+
-    		"If this is not your main split set, or are not doing ILs, please turn this setting off.",
+    		"If this is your main split set, or you are not doing ILs, please turn this setting off.",
        		"Sonic Adventure 2: Battle | LiveSplit",
        		MessageBoxButtons.OK,MessageBoxIcon.Information
        	);
