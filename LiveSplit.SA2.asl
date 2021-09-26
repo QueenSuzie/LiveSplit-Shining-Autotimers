@@ -1,4 +1,4 @@
-//Version 5.2
+//Version 5.3
 //By ShiningFace, Jelly, IDGeek
 
 state("sonic2app")
@@ -89,21 +89,16 @@ state("Launcher")
 
 init
 {
-	if ((settings["timerPopup"]) && timer.CurrentTimingMethod == TimingMethod.RealTime)
+	if (settings["timeIGT"])
 	{        
     	var timingMessage = MessageBox.Show
 		(
        		"This game uses Loadless as the main timing method.\n"+
-    		"LiveSplit is currently set to display Real Time (RTA).\n"+
-    		"Would you like to set the timing method to Loadless?",
+    		"LiveSplit is currently set to display IGT via options.\n"+
+    		"If this is not your main split set, or are not doing ILs, please turn this setting off.",
        		"Sonic Adventure 2: Battle | LiveSplit",
-       		MessageBoxButtons.YesNo,MessageBoxIcon.Question
+       		MessageBoxButtons.OK,MessageBoxIcon.Information
        	);
-		
-		if (timingMessage == DialogResult.Yes) 
-		{
-			timer.CurrentTimingMethod = TimingMethod.GameTime;
-        }
 	}
 }
 
@@ -116,8 +111,8 @@ startup
 	vars.lastGoodTimerVal = Int32.MaxValue;
 	vars.splitDelay = 0;
 	//Settings
-	settings.Add("timerPopup", false, "Ask to switch to Loadless on startup.");
 	settings.Add("storyStart", false, "Only start timer when starting a story.");
+	settings.Add("timeIGT", false, "Use legacy IGT timing (Only activate for backup splits/ILs).");
 	settings.Add("huntingTimer", false, "Allow the use of v2.5 loadless if category is set improperly.");
 	settings.Add("stageExit", false, "Restart timer upon manually exiting a stage in stage select.");
 	settings.Add("resetIL", false, "Restart timer upon restart/death (Only activate for ILs).");
@@ -159,7 +154,11 @@ update
 	{
 		vars.countFrames = false;
 	}
-	else vars.countFrames = true;
+	else if (!settings["timeIGT"])
+	{
+		vars.countFrames = true;
+	}
+	else vars.countFrames = false;
 	
 	if (vars.countFrames)
 	{
