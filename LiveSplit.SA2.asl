@@ -1,4 +1,4 @@
-//Version 5.3
+//Version 5.4
 //By ShiningFace, Jelly, IDGeek
 
 state("sonic2app")
@@ -131,7 +131,7 @@ update
 	//Loading, saving, and cutscenes
 	else if (current.inCutscene || current.inEmblem || current.nowLoading || current.saveChao == 1 || old.saveChao == 1 || 
 	((current.levelEnd && old.levelEnd) && (current.ringSaving == 4 || old.ringSaving == 4)) || (current.mainMenu1 == 1 && current.currMenu == 24 && current.currMenuState == 13) || 
-	(current.mainMenu1 == 0 && current.stageSelect == 0 && current.storyRecap == 0 && current.twoplayerMenu == 0 && current.currMenuState != 2 && (!settings["huntingTimer"]) && 
+	(current.mainMenu1 == 0 && current.stageSelect == 0 && current.storyRecap == 0 && current.twoplayerMenu == 0 && current.currMenuState != 2 && !settings["huntingTimer"] && 
 	timer.Run.CategoryName != "Knuckles Centurion" && timer.Run.CategoryName != "Knuckles stages x20" && timer.Run.CategoryName != "Rouge Centurion" && timer.Run.CategoryName != "Rouge stages x25" && 
 	((current.stageID != 66 && current.stageID != 65 && current.inlevelCutscene == 14) || 
 	(current.gameplayPause == 117 || current.gameplayPause == 123) && (current.levelTimer == old.levelTimer))))
@@ -146,7 +146,7 @@ update
 	}
 	//Normal stages
 	else if (current.mainMenu1 == 0 && current.stageSelect == 0 && current.storyRecap == 0 && current.twoplayerMenu == 0 && current.currMenuState != 2 && 
-	((current.menuMode == 16 && current.controlActive && !current.levelEnd && !current.timerEnd && current.timestop != 2) || ((!settings["huntingTimer"]) && 
+	((current.menuMode == 16 && current.controlActive && !current.levelEnd && !current.timerEnd && current.timestop != 2) || (!settings["huntingTimer"] && 
 	timer.Run.CategoryName != "Knuckles Centurion" && timer.Run.CategoryName != "Knuckles stages x20" && timer.Run.CategoryName != "Rouge Centurion" && timer.Run.CategoryName != "Rouge stages x25" &&
 	(current.levelEnd || (current.menuMode == 0 && !current.levelEnd) || (current.stageID == 90 && !current.controlActive && 
 	(current.menuMode == 29 || old.menuMode == 29 || current.menuMode == 12 || old.menuMode == 12 || current.menuMode == 8 || old.menuMode == 8 || current.menuMode == 7 || old.menuMode == 7)) ||  
@@ -155,6 +155,10 @@ update
 		vars.countFrames = false;
 	}
 	else if (!settings["timeIGT"])
+	{
+		vars.countFrames = true;
+	}
+	else if (settings["timeIGT"] && current.timestop == 2)
 	{
 		vars.countFrames = true;
 	}
@@ -194,7 +198,7 @@ update
 	//Splitting
 	vars.splitDelay = Math.Max(0, vars.splitDelay-1);
 	//Boss rush
-	if ((settings["bossRush"]) && current.bossRush == 1 && current.stageID != 66 && current.stageID != 42)
+	if (settings["bossRush"] && current.bossRush == 1 && current.stageID != 66 && current.stageID != 42)
 	{
 		vars.splitDelay = 0;
 	}
@@ -215,7 +219,7 @@ update
 		}
 	}
 	//Cannon's Core
-	else if ((settings["cannonsCore"]) && (current.stageID == 38 || current.stageID == 37 || current.stageID == 36 || current.stageID == 35))
+	else if (settings["cannonsCore"] && (current.stageID == 38 || current.stageID == 37 || current.stageID == 36 || current.stageID == 35))
 	{
 		if (current.controlActive && current.levelEnd && !old.levelEnd)
 		{
@@ -231,7 +235,7 @@ update
 		}
 	}
 	//Chao World
-	else if (((settings["chaoRace"]) && current.stageID == 90 && current.raceChao != 1 && old.raceChao == 1) || 
+	else if ((settings["chaoRace"] && current.stageID == 90 && current.raceChao != 1 && old.raceChao == 1) || 
 	(current.stageID == 90 && current.chaoID == 1 && current.inEmblem && !old.inEmblem))
 	{
 		vars.splitDelay = 1;
