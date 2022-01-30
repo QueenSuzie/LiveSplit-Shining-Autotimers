@@ -1,4 +1,4 @@
-//Version 5.5
+//Version 5.6
 //By ShiningFace, Jelly, IDGeek
 
 state("sonic2app")
@@ -145,6 +145,10 @@ update
 		vars.countFrames = false;
 	}
 	//Normal stages
+	else if (current.mainMenu2 == 1 && (current.currMenuState == 4 || current.currMenuState == 5 || current.currMenuState == 6))
+	{
+		vars.countFrames = true;
+	}
 	else if (current.mainMenu1 == 0 && current.stageSelect == 0 && current.storyRecap == 0 && current.twoplayerMenu == 0 && current.currMenuState != 2 && current.currMenuState != 3 && 
 	((current.menuMode == 16 && current.controlActive && !current.levelEnd && !current.timerEnd && current.timestop != 2) || (!settings["huntingTimer"] && 
 	timer.Run.CategoryName != "Knuckles Centurion" && timer.Run.CategoryName != "Knuckles stages x20" && timer.Run.CategoryName != "Rouge Centurion" && timer.Run.CategoryName != "Rouge stages x25" &&
@@ -153,10 +157,6 @@ update
 	(current.stageID != 90 && current.menuMode != 0 && current.timerEnd)))))
 	{
 		vars.countFrames = false;
-	}
-	else if (current.mainMenu2 == 1 && current.currMenuState != 4 && current.currMenuState != 5 && current.currMenuState != 6)
-	{
-		vars.countFrames = true;
 	}
 	else if (!settings["timeIGT"])
 	{
