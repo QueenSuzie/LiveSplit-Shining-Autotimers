@@ -145,7 +145,7 @@ update
 		vars.countFrames = false;
 	}
 	//Normal stages
-	else if (current.mainMenu2 == 1 && (current.currMenuState == 4 || current.currMenuState == 5 || current.currMenuState == 6))
+	else if (current.mainMenu2 == 1 && (current.currMenuState == 4 || current.currMenuState == 5 || current.currMenuState == 6 || current.currMenuState == 7))
 	{
 		vars.countFrames = true;
 	}
