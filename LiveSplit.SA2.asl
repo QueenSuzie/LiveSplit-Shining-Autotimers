@@ -1,4 +1,4 @@
-//Version 5.6
+//Version 5.7
 //By ShiningFace, Jelly, IDGeek
 
 state("sonic2app")
@@ -89,17 +89,6 @@ state("Launcher")
 
 init
 {
-	if (settings["timeIGT"])
-	{        
-    	var timingMessage = MessageBox.Show
-		(
-       		"This game uses Loadless as the main timing method.\n"+
-    		"LiveSplit is currently set to display IGT via options.\n"+
-    		"If this is your main split set, or you are not doing ILs, please turn this setting off.",
-       		"Sonic Adventure 2: Battle | LiveSplit",
-       		MessageBoxButtons.OK,MessageBoxIcon.Information
-       	);
-	}
 }
 
 startup
@@ -145,7 +134,7 @@ update
 		vars.countFrames = false;
 	}
 	//Normal stages
-	else if (current.mainMenu2 == 1 && (current.currMenuState == 4 || current.currMenuState == 5 || current.currMenuState == 6 || current.currMenuState == 7))
+	else if (!settings["timeIGT"] && current.mainMenu2 == 1 && (current.currMenuState == 4 || current.currMenuState == 5 || current.currMenuState == 6 || current.currMenuState == 7))
 	{
 		vars.countFrames = true;
 	}
