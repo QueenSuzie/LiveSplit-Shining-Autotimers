@@ -1,4 +1,4 @@
-//Version 5.7
+//Version 5.8
 //By ShiningFace, Jelly, IDGeek
 
 state("sonic2app")
@@ -103,6 +103,7 @@ startup
 	settings.Add("storyStart", false, "Only start timer when starting a story.");
 	settings.Add("timeIGT", false, "Use legacy IGT timing (Only activate for backup splits/ILs).");
 	settings.Add("huntingTimer", false, "Allow the use of v2.5 loadless if category is set improperly.");
+	settings.Add("combinedHunting", false, "Only add up hunting levels. (Combined hunting).");
 	settings.Add("stageExit", false, "Restart timer upon manually exiting a stage in stage select.");
 	settings.Add("resetIL", false, "Restart timer upon restart/death (Only activate for ILs).");
 	settings.Add("cannonsCore", false, "Only split in Cannon's Core when a mission is completed.");
@@ -134,7 +135,7 @@ update
 		vars.countFrames = false;
 	}
 	//Normal stages
-	else if (!settings["timeIGT"] && current.mainMenu2 == 1 && (current.currMenuState == 4 || current.currMenuState == 5 || current.currMenuState == 6 || current.currMenuState == 7))
+	else if (!settings["timeIGT"] && !settings["combinedHunting"] && current.mainMenu2 == 1 && (current.currMenuState == 4 || current.currMenuState == 5 || current.currMenuState == 6 || current.currMenuState == 7))
 	{
 		vars.countFrames = true;
 	}
@@ -149,7 +150,18 @@ update
 	}
 	else if (!settings["timeIGT"])
 	{
-		vars.countFrames = true;
+		if (!settings["combinedHunting"])
+		{
+			vars.countFrames = true;
+		}
+		else if (settings["combinedHunting"])
+		{
+			if (current.stageID == 5 || current.stageID == 7 || current.stageID == 8 || current.stageID == 16 || current.stageID == 18 || current.stageID == 25 || current.stageID == 26 || current.stageID == 32 || current.stageID == 44)
+			{
+				vars.countFrames = true;
+			}
+		else vars.countFrames = false;
+		}
 	}
 	else if (settings["timeIGT"] && current.timestop == 2)
 	{
@@ -180,10 +192,17 @@ update
 		int oldGameTime =  (oldMinutes*6000) +  (oldSeconds*100) +  (oldCentis);
 		//Only add positive time
 		int timeToAdd = Math.Max(0, inGameTime-oldGameTime);
-		//Don't add time when the timer goes beserk in loading screens
+		
 		if (current.controlActive)
 		{
-			vars.totalTime += timeToAdd;
+			if (settings["combinedHunting"] && (current.stageID == 5 || current.stageID == 7 || current.stageID == 8 || current.stageID == 16 || current.stageID == 18 || current.stageID == 25 || current.stageID == 26 || current.stageID == 32 || current.stageID == 44))
+			{
+				vars.totalTime += timeToAdd;
+			}
+			else if (!settings["combinedHunting"])
+			{
+				vars.totalTime += timeToAdd;
+			}
 		}
 
 		vars.lastGoodTimerVal = current.levelTimer;
