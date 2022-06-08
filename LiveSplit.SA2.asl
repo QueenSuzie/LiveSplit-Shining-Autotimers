@@ -1,4 +1,4 @@
-//Version 5.82
+//Version 5.83
 //By ShiningFace, Jelly, IDGeek
 
 state("sonic2app")
@@ -106,6 +106,7 @@ startup
 	settings.Add("huntingTimer", false, "Allow the use of v2.5 loadless if category is set improperly.");
 	settings.Add("timeIGT", false, "Use legacy IGT timing.");
 	settings.Add("combinedHunting", false, "Only add up hunting levels (Combined hunting).");
+	settings.Add("no280", false, "Don't count Route 280 as part of Rogue stages.", "combinedHunting");
 	settings.Add("stageExit", false, "Restart timer upon manually exiting a stage in stage select.");
 	settings.Add("resetIL", false, "Restart timer upon restart/death (Only activate for ILs).");
 	settings.Add("cannonsCore", false, "Only split in Cannon's Core when a mission is completed.");
@@ -158,7 +159,8 @@ update
 		}
 		else if (settings["combinedHunting"])
 		{
-			if (current.stageID == 5 || current.stageID == 7 || current.stageID == 8 || current.stageID == 16 || current.stageID == 18 || current.stageID == 25 || current.stageID == 26 || current.stageID == 32 || current.stageID == 44 || (current.stageID == 70 && current.charID == 5))
+			if (current.stageID == 5 || current.stageID == 7 || current.stageID == 8 || current.stageID == 16 || current.stageID == 18 || current.stageID == 25 || 
+			current.stageID == 26 || current.stageID == 32 || current.stageID == 44 || (!settings["no280"] && current.stageID == 70 && current.charID == 5))
 			{
 				vars.countFrames = true;
 			}
@@ -197,7 +199,8 @@ update
 		
 		if (current.controlActive)
 		{
-			if (settings["combinedHunting"] && (current.stageID == 5 || current.stageID == 7 || current.stageID == 8 || current.stageID == 16 || current.stageID == 18 || current.stageID == 25 || current.stageID == 26 || current.stageID == 32 || current.stageID == 44 || (current.stageID == 70 && current.charID == 5)))
+			if (settings["combinedHunting"] && (current.stageID == 5 || current.stageID == 7 || current.stageID == 8 || current.stageID == 16 || current.stageID == 18 || current.stageID == 25 || 
+			current.stageID == 26 || current.stageID == 32 || current.stageID == 44 || (!settings["no280"] && current.stageID == 70 && current.charID == 5)))
 			{
 				vars.totalTime += timeToAdd;
 			}
