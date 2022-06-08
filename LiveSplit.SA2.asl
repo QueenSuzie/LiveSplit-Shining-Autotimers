@@ -101,9 +101,9 @@ startup
 	vars.splitDelay = 0;
 	//Settings
 	settings.Add("storyStart", false, "Only start timer when starting a story.");
-	settings.Add("timeIGT", false, "Use legacy IGT timing (Only activate for backup splits/ILs).");
 	settings.Add("huntingTimer", false, "Allow the use of v2.5 loadless if category is set improperly.");
-	settings.Add("combinedHunting", false, "Only add up hunting levels. (Combined hunting).");
+	settings.Add("timeIGT", false, "Use legacy IGT timing.");
+	settings.Add("combinedHunting", false, "Only add up hunting levels (Combined hunting).");
 	settings.Add("stageExit", false, "Restart timer upon manually exiting a stage in stage select.");
 	settings.Add("resetIL", false, "Restart timer upon restart/death (Only activate for ILs).");
 	settings.Add("cannonsCore", false, "Only split in Cannon's Core when a mission is completed.");
@@ -209,8 +209,13 @@ update
 	}
 	//Splitting
 	vars.splitDelay = Math.Max(0, vars.splitDelay-1);
+	//Hunting
+	if (settings["combinedHunting"])
+	{
+		vars.splitDelay = 0;
+	}
 	//Boss rush
-	if (settings["bossRush"] && current.bossRush == 1 && current.stageID != 66 && current.stageID != 42)
+	else if (settings["bossRush"] && current.bossRush == 1 && current.stageID != 66 && current.stageID != 42)
 	{
 		vars.splitDelay = 0;
 	}
