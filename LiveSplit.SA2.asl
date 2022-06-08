@@ -1,4 +1,4 @@
-//Version 5.8
+//Version 5.81
 //By ShiningFace, Jelly, IDGeek
 
 state("sonic2app")
@@ -156,7 +156,7 @@ update
 		}
 		else if (settings["combinedHunting"])
 		{
-			if (current.stageID == 5 || current.stageID == 7 || current.stageID == 8 || current.stageID == 16 || current.stageID == 18 || current.stageID == 25 || current.stageID == 26 || current.stageID == 32 || current.stageID == 44)
+			if (current.stageID == 5 || current.stageID == 7 || current.stageID == 8 || current.stageID == 16 || current.stageID == 18 || current.stageID == 25 || current.stageID == 26 || current.stageID == 32 || current.stageID == 44 || (current.stageID == 70 && timer.Run.CategoryName == "Dark Story"))
 			{
 				vars.countFrames = true;
 			}
