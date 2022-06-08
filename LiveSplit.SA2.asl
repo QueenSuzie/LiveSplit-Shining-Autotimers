@@ -195,7 +195,7 @@ update
 		
 		if (current.controlActive)
 		{
-			if (settings["combinedHunting"] && (current.stageID == 5 || current.stageID == 7 || current.stageID == 8 || current.stageID == 16 || current.stageID == 18 || current.stageID == 25 || current.stageID == 26 || current.stageID == 32 || current.stageID == 44))
+			if (settings["combinedHunting"] && (current.stageID == 5 || current.stageID == 7 || current.stageID == 8 || current.stageID == 16 || current.stageID == 18 || current.stageID == 25 || current.stageID == 26 || current.stageID == 32 || current.stageID == 44 || (current.stageID == 70 && timer.Run.CategoryName == "Dark Story")))
 			{
 				vars.totalTime += timeToAdd;
 			}
