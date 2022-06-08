@@ -1,4 +1,4 @@
-//Version 5.81
+//Version 5.82
 //By ShiningFace, Jelly, IDGeek
 
 state("sonic2app")
@@ -16,6 +16,7 @@ state("sonic2app")
 	byte timestop         : 0x0134AFF7;
 	byte ringSaving       : 0x015455DC;
 	byte stageID          : 0x01534B70;
+	byte charID           : 0x01534B80;
 	byte menuMode         : 0x01534BE0;
 	byte timesRestarted   : 0x01534BE8;
 	byte saveChao         : 0x015F645C;
@@ -59,6 +60,7 @@ state("Launcher")
 	byte timestop         : 0x0134AFF7;
 	byte ringSaving       : 0x015455DC;
 	byte stageID          : 0x01534B70;
+	byte charID           : 0x01534B80;
 	byte menuMode         : 0x01534BE0;
 	byte timesRestarted   : 0x01534BE8;
 	byte saveChao         : 0x015F645C;
@@ -156,7 +158,7 @@ update
 		}
 		else if (settings["combinedHunting"])
 		{
-			if (current.stageID == 5 || current.stageID == 7 || current.stageID == 8 || current.stageID == 16 || current.stageID == 18 || current.stageID == 25 || current.stageID == 26 || current.stageID == 32 || current.stageID == 44 || (current.stageID == 70 && timer.Run.CategoryName == "Dark Story"))
+			if (current.stageID == 5 || current.stageID == 7 || current.stageID == 8 || current.stageID == 16 || current.stageID == 18 || current.stageID == 25 || current.stageID == 26 || current.stageID == 32 || current.stageID == 44 || (current.stageID == 70 && current.charID == 5))
 			{
 				vars.countFrames = true;
 			}
@@ -195,7 +197,7 @@ update
 		
 		if (current.controlActive)
 		{
-			if (settings["combinedHunting"] && (current.stageID == 5 || current.stageID == 7 || current.stageID == 8 || current.stageID == 16 || current.stageID == 18 || current.stageID == 25 || current.stageID == 26 || current.stageID == 32 || current.stageID == 44 || (current.stageID == 70 && timer.Run.CategoryName == "Dark Story")))
+			if (settings["combinedHunting"] && (current.stageID == 5 || current.stageID == 7 || current.stageID == 8 || current.stageID == 16 || current.stageID == 18 || current.stageID == 25 || current.stageID == 26 || current.stageID == 32 || current.stageID == 44 || (current.stageID == 70 && current.charID == 5)))
 			{
 				vars.totalTime += timeToAdd;
 			}
@@ -204,7 +206,6 @@ update
 				vars.totalTime += timeToAdd;
 			}
 		}
-
 		vars.lastGoodTimerVal = current.levelTimer;
 	}
 	//Splitting
