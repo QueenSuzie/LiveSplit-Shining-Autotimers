@@ -106,7 +106,7 @@ startup
 	settings.Add("huntingTimer", false, "Allow the use of v2.5 loadless if category is set improperly.");
 	settings.Add("timeIGT", false, "Use legacy IGT timing.");
 	settings.Add("combinedHunting", false, "Only add up hunting levels (Combined hunting).");
-	settings.Add("no280", false, "Don't count Route 280 as part of Rogue stages.", "combinedHunting");
+	settings.Add("no280", false, "Don't count Route 280 as part of Rouge stages.", "combinedHunting");
 	settings.Add("stageExit", false, "Restart timer upon manually exiting a stage in stage select.");
 	settings.Add("resetIL", false, "Restart timer upon restart/death (Only activate for ILs).");
 	settings.Add("cannonsCore", false, "Only split in Cannon's Core when a mission is completed.");
