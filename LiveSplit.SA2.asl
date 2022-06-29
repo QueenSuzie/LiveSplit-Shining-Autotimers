@@ -1,4 +1,4 @@
-//Version 5.83
+//Version 6
 //By ShiningFace, Jelly, IDGeek
 
 state("sonic2app")
@@ -219,7 +219,8 @@ update
 		vars.splitDelay = 0;
 	}
 	//Boss rush
-	else if (settings["bossRush"] && current.bossRush == 1 && current.stageID != 66 && current.stageID != 42)
+	else if (settings["bossRush"] && current.bossRush == 1 && (current.stageID == 67 || current.stageID == 65 || current.stageID == 64 || current.stageID == 63 || current.stageID == 62 || 
+	current.stageID == 61 || current.stageID == 60 || current.stageID == 33 || current.stageID == 29 || current.stageID == 20 || current.stageID == 19))
 	{
 		vars.splitDelay = 0;
 	}
