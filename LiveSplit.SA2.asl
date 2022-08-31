@@ -1,5 +1,5 @@
 //Version 6.1
-//By ShiningFace, Jelly, IDGeek
+//By ShiningFace, Jelly, IDGeek, Skewb
 
 state("sonic2app")
 {
