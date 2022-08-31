@@ -43,6 +43,10 @@ state("sonic2app")
 	
 	int currMenu          : 0x0197BB10;
 	int currMenuState     : 0x0197BB14;
+
+	//Quick Save Reload
+	int qsrPointer        : 0x00054884;
+	int qsrReloadCount    : 0x00054884, 0x0;
 }
 
 state("Launcher")
@@ -87,6 +91,10 @@ state("Launcher")
 	
 	int currMenu          : 0x0197BB10;
 	int currMenuState     : 0x0197BB14;
+
+	//Quick Save Reload
+	int qsrPointer        : 0x00054884;
+	int qsrReloadCount    : 0x00054884, 0x0;
 }
 
 init
@@ -109,6 +117,7 @@ startup
 	settings.Add("no280", false, "Don't count Route 280 as part of Rouge stages.", "combinedHunting");
 	settings.Add("stageExit", false, "Restart timer upon manually exiting a stage in stage select.");
 	settings.Add("resetIL", false, "Restart timer upon restart/death (Only activate for ILs).");
+	settings.Add("resetQSR", false, "Restart timer upon reloading if using Quick Save Reload.");
 	settings.Add("cannonsCore", false, "Only split in Cannon's Core when a mission is completed.");
 	settings.Add("bossRush", false, "Only split in Boss Rush when defeating the last boss of a story.");
 	settings.Add("chaoRace", false, "Split when exiting a Chao Race.");
@@ -354,6 +363,13 @@ reset
 	else if (settings["resetIL"])
 	{
 		if (!current.levelEnd && !current.controlActive && old.controlActive && current.timerEnd)
+		{
+			return true;
+		}
+	}
+	else if (settings["resetQSR"] && current.qsrPointer != -858993460)
+	{
+		if (old.qsrReloadCount < current.qsrReloadCount)
 		{
 			return true;
 		}
