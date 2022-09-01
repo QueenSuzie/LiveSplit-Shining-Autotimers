@@ -48,6 +48,56 @@ state("sonic2app")
 	int qsrReloadCount    : 0x00054884, 0x0;
 }
 
+//Version 7
+//By Shining, Jelly, IDGeek, Skewb
+
+state("sonic2app")
+{
+	bool timerEnd         : 0x0134AFDA;
+	bool runStart         : 0x0134AFFA;
+	bool controlActive    : 0x0134AFFE;
+	bool levelEnd         : 0x0134B002;
+	bool inCutscene       : 0x015420F8;
+	bool nowLoading       : 0x016557E4;
+	bool inAMV            : 0x016EDE28;
+	bool inEmblem         : 0x01919BE0;
+	
+	byte bossRush         : 0x00877DC4;
+	byte timestop         : 0x0134AFF7;
+	byte ringSaving       : 0x015455DC;
+	byte stageID          : 0x01534B70;
+	byte charID           : 0x01534B80;
+	byte menuMode         : 0x01534BE0;
+	byte timesRestarted   : 0x01534BE8;
+	byte saveChao         : 0x015F645C;
+	byte chaoID           : 0x0165A2CC;
+	byte textCutscene     : 0x016EFD44;
+	byte raceChao         : 0x019D2784;
+	byte twoplayerMenu    : 0x0191B88C;
+	byte mainMenu1        : 0x0191BD2C;
+	byte mainMenu2        : 0x0197BAE0;
+	byte stageSelect      : 0x0191BEAC;
+	byte storyRecap       : 0x0191C1AC;
+	byte inlevelCutscene  : 0x019D0F9C;
+	byte gameplayPause    : 0x021F0014;
+
+	short currEmblems     : 0x01536296;
+	short currEvent       : 0x01628AF4;
+	//Timing
+	int levelTimer        : 0x015457F8;
+	int levelTimerClone   : 0x0134AFDB;
+	int levelTimer        : 0x015457F8;
+	int frameCount        : 0x0134B038;
+
+	float bossHealth      : 0x019E9604, 0x48;
+	
+	int currMenu          : 0x0197BB10;
+	int currMenuState     : 0x0197BB14;
+	//Quick Save Reload
+	int qsrPointer        : 0x00054884;
+	int qsrReloadCount    : 0x00054884, 0x0;
+}
+
 state("Launcher")
 {
 	bool timerEnd         : 0x0134AFDA;
@@ -129,7 +179,8 @@ update
 		vars.countFrames = false;
 	}
 	//Loading, saving, and cutscenes
-	else if (current.inCutscene || current.inEmblem || current.nowLoading || current.saveChao == 1 || old.saveChao == 1 || 
+	else if (current.inCutscene || current.inEmblem || current.nowLoading || current.saveChao == 1 || 
+	current.menuMode == 1 || current.menuMode == 2 || current.menuMode == 3 || current.menuMode == 7 || current.menuMode == 8 || 
 	((current.levelEnd && old.levelEnd) && (current.ringSaving == 4 || old.ringSaving == 4)) || (current.mainMenu1 == 1 && current.currMenu == 24 && current.currMenuState == 13) || 
 	(current.mainMenu1 == 0 && current.stageSelect == 0 && current.storyRecap == 0 && current.twoplayerMenu == 0 && current.currMenuState != 2 && !settings["huntingTimer"] && 
 	timer.Run.GameName != "Sonic Adventure 2: Hunting Redux" && timer.Run.CategoryName != "Knuckles Centurion" && timer.Run.CategoryName != "Knuckles stages x20" && 
