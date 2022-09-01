@@ -1,4 +1,4 @@
-//Version 7
+//Version 7.1
 //By Shining, Jelly, IDGeek, Skewb
 
 state("sonic2app")
@@ -130,7 +130,7 @@ update
 	}
 	//Loading, saving, and cutscenes
 	else if (current.inCutscene || current.inEmblem || current.nowLoading || current.saveChao == 1 || 
-	current.menuMode == 1 || current.menuMode == 2 || current.menuMode == 3 || current.menuMode == 7 || current.menuMode == 8 || 
+	current.menuMode == 1 || current.menuMode == 2 || current.menuMode == 3 || current.menuMode == 7 || 
 	((current.levelEnd && old.levelEnd) && (current.ringSaving == 4 || old.ringSaving == 4)) || (current.mainMenu1 == 1 && current.currMenu == 24 && current.currMenuState == 13) || 
 	(current.mainMenu1 == 0 && current.stageSelect == 0 && current.storyRecap == 0 && current.twoplayerMenu == 0 && current.currMenuState != 2 && !settings["huntingTimer"] && 
 	timer.Run.GameName != "Sonic Adventure 2: Hunting Redux" && timer.Run.CategoryName != "Knuckles Centurion" && timer.Run.CategoryName != "Knuckles stages x20" && 
