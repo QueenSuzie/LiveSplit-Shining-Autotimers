@@ -1,4 +1,4 @@
-/Version 8
+//Version 8
 //By Shining, Jelly, IDGeek, Skewb
 
 state("sonic2app")
