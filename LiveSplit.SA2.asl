@@ -1,4 +1,4 @@
-//Version 7.2
+/Version 8
 //By Shining, Jelly, IDGeek, Skewb
 
 state("sonic2app")
@@ -103,10 +103,11 @@ startup
 {
 	refreshRate = 120;
 	//Variables
+	vars.lastGoodTimerVal = Int32.MaxValue;
 	vars.totalTime = 0;     //Time accumulated from level timer, in centiseconds
 	vars.countedFrames = 0; //How many frames have elapsed
-	vars.lastGoodTimerVal = Int32.MaxValue;
 	vars.splitDelay = 0;
+	vars.firstLoad = true;
 	vars.qsrEnabled = false;
 	//Settings
 	settings.Add("storyStart", false, "Only start timer when starting a story.");
@@ -123,6 +124,14 @@ startup
 
 update
 {
+	if (current.menuMode == 0 || current.menuMode == 1 || current.menuMode == 16)
+	{
+		vars.firstLoad = true;
+	}
+	else if (current.menuMode == 9 || current.menuMode == 13)
+	{
+		vars.firstLoad = false;
+	}
 	//Pauses timer when livesplit is paused
 	if (timer.CurrentPhase == TimerPhase.Paused)
 	{
@@ -130,11 +139,11 @@ update
 	}
 	//Loading, saving, and cutscenes
 	else if (current.inCutscene || current.inEmblem || current.nowLoading || current.saveChao == 1 || 
-	current.menuMode == 1 || current.menuMode == 2 || current.menuMode == 3 || current.menuMode == 7 || 
+	current.menuMode == 1 || current.menuMode == 2 || current.menuMode == 3 || (!current.levelEnd && vars.firstLoad && current.menuMode == 7) || 
 	((current.levelEnd && old.levelEnd) && (current.ringSaving == 4 || old.ringSaving == 4)) || (current.mainMenu1 == 1 && current.currMenu == 24 && current.currMenuState == 13) || 
 	(current.mainMenu1 == 0 && current.stageSelect == 0 && current.storyRecap == 0 && current.twoplayerMenu == 0 && current.currMenuState != 2 && !settings["huntingTimer"] && 
 	timer.Run.GameName != "Sonic Adventure 2: Hunting Redux" && timer.Run.CategoryName != "Knuckles Centurion" && timer.Run.CategoryName != "Knuckles stages x20" && 
-	timer.Run.CategoryName != "Rouge Centurion" && timer.Run.CategoryName != "Rouge stages x25" && ((current.stageID != 66 && current.stageID != 65 && current.inlevelCutscene == 14) || 
+	timer.Run.CategoryName != "Rouge Centurion" && timer.Run.CategoryName != "Rouge stages x25" && ((current.menuMode == 7) || (current.stageID != 66 && current.stageID != 65 && current.inlevelCutscene == 14) || 
 	(current.gameplayPause == 117 || current.gameplayPause == 123) && (current.levelTimer == old.levelTimer))))
 	{
 		vars.countFrames = false;
@@ -151,8 +160,8 @@ update
 		vars.countFrames = true;
 	}
 	else if (current.mainMenu1 == 0 && current.stageSelect == 0 && current.storyRecap == 0 && current.twoplayerMenu == 0 && current.currMenuState != 3 && 
-	((current.menuMode == 16 && current.controlActive && !current.levelEnd && !current.timerEnd && current.timestop != 2) || (!settings["huntingTimer"] && 
-	timer.Run.GameName != "Sonic Adventure 2: Hunting Redux" && timer.Run.CategoryName != "Knuckles Centurion" && timer.Run.CategoryName != "Knuckles stages x20" && 
+	((current.menuMode == 16 && current.controlActive && !current.levelEnd && !current.timerEnd && current.timestop != 2) || 
+	(!settings["huntingTimer"] && timer.Run.GameName != "Sonic Adventure 2: Hunting Redux" && timer.Run.CategoryName != "Knuckles Centurion" && timer.Run.CategoryName != "Knuckles stages x20" && 
 	timer.Run.CategoryName != "Rouge Centurion" && timer.Run.CategoryName != "Rouge stages x25" && (current.levelEnd || (current.menuMode == 0 && !current.levelEnd) || (current.stageID == 90 && !current.controlActive && 
 	(current.menuMode == 29 || old.menuMode == 29 || current.menuMode == 12 || old.menuMode == 12 || current.menuMode == 8 || old.menuMode == 8 || current.menuMode == 7 || old.menuMode == 7)) ||  
 	(current.stageID != 90 && current.menuMode != 0 && current.timerEnd)))))
@@ -221,16 +230,11 @@ update
 	}
 	//Splitting
 	vars.splitDelay = Math.Max(0, vars.splitDelay-1);
-	//Hunting
-	if (settings["combinedHunting"])
-	{
-		vars.splitDelay = 0;
-	}
 	//Boss rush
-	else if (settings["bossRush"] && current.bossRush == 1 && (current.stageID == 67 || current.stageID == 65 || current.stageID == 64 || current.stageID == 63 || current.stageID == 62 || 
+	if (settings["bossRush"] && current.bossRush == 1 && (current.stageID == 67 || current.stageID == 65 || current.stageID == 64 || current.stageID == 63 || current.stageID == 62 || 
 	current.stageID == 61 || current.stageID == 60 || current.stageID == 33 || current.stageID == 29 || current.stageID == 20 || current.stageID == 19))
 	{
-		vars.splitDelay = 0;
+		vars.splitDelay = 1;
 	}
 	//Final boss
 	else if ((timer.Run.CategoryName == "Hero Story" || timer.Run.CategoryName == "Dark Story") && current.stageID == 42)
@@ -292,6 +296,7 @@ start
 	vars.totalTime = 0;
 	vars.countedFrames = 0;
 	vars.splitDelay = 0;
+	vars.firstLoad = true;
 	vars.countFrames = false;
 	//QSR Check
 	if (current.qsrPointer == 0xCCCCCCCC)
@@ -309,8 +314,7 @@ start
 	//Only start timer when selecting 2p mode
 	else if (timer.Run.CategoryName == "Any%")
 	{
-		if (current.mainMenu1 != 1 && current.mainMenu2 != 1 && current.stageSelect != 1 && current.twoplayerMenu == 1 &&
-		!current.nowLoading && old.nowLoading)
+		if (current.mainMenu1 != 1 && current.mainMenu2 != 1 && current.stageSelect != 1 && current.twoplayerMenu == 1 && old.twoplayerMenu == 0)
 		{
 			return true;
 		}
@@ -318,8 +322,8 @@ start
 	//Only start timer when starting a story or selecting chao garden
 	else if (timer.Run.CategoryName == "Chao%")
 	{
-		if (current.mainMenu1 != 1 && current.mainMenu2 != 1 && current.stageSelect != 1 && (current.stageID == 90 || current.currMenu == 5) && 
-		current.runStart && current.nowLoading && !old.nowLoading)
+		if (current.mainMenu1 != 1 && current.mainMenu2 != 1 && current.stageSelect != 1 && 
+		((current.stageID == 90 && (current.menuMode == 1 && old.menuMode != 1)) || current.currMenu == 5) && (current.runStart && !old.runStart))
 		{
 			return true;
 		}
@@ -327,15 +331,14 @@ start
 	//2p Levels
 	else if (timer.Run.CategoryName == "2 Player Levels")
 	{
-		if (current.currMenu == 16 && ((current.menuMode == 1 && old.menuMode != 1) || 
-		(!current.nowLoading && old.nowLoading)) && current.runStart)
+		if (current.currMenu == 16 && (current.menuMode == 1 && old.menuMode != 1) && (current.runStart && !old.runStart))
 		{
 			return true;
 		}
 	}
 	//Normal
 	else if (current.mainMenu1 != 1 && current.mainMenu2 != 1 && current.stageSelect != 1 && (!settings["storyStart"] || current.currMenu == 5) && 
-	((current.menuMode == 1 && old.menuMode != 1) || (!current.nowLoading && old.nowLoading)) && current.runStart)
+	((current.menuMode == 1 && old.menuMode != 1) || (current.inCutscene && !old.inCutscene)) && current.runStart)
 	{
 		return true;
 	}
