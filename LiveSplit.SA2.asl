@@ -344,15 +344,16 @@ start
 	{
 		if (settings["storyStart"] && !settings["NG+"])
 		{
-			if (current.currMenu == 5 && ((timer.Run.CategoryName == "Hero Story" && current.currEvent == 0) || (timer.Run.CategoryName == "Dark Story" && current.currEvent == 100)))
+			if (current.currMenu == 5 && ((timer.Run.CategoryName == "Hero Story" && current.currEvent == 0) || (timer.Run.CategoryName == "Dark Story" && current.currEvent == 100) ||
+			(timer.Run.CategoryName == "All Stories" && (current.currEvent == 0 || current.currEvent == 100))))
 			{
 				return true;
 			}
 		}
 		else if (settings["NG+"])
 		{
-			if (current.currMenu == 2 && (timer.Run.CategoryName == "Hero Story" && current.currEvent == 0) || (timer.Run.CategoryName == "Dark Story" && current.currEvent == 100) || 
-			(timer.Run.CategoryName == "Last Story" && current.currEvent == 200))
+			if (current.currMenu == 2 && ((timer.Run.CategoryName == "Hero Story" && current.currEvent == 0) || (timer.Run.CategoryName == "Dark Story" && current.currEvent == 100) || 
+			(timer.Run.CategoryName == "Last Story" && current.currEvent == 200) || (timer.Run.CategoryName == "All Stories" && (current.currEvent == 0 || current.currEvent == 100))))
 			{
 				return true;
 			}
