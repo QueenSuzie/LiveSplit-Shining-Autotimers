@@ -1,4 +1,4 @@
-//Version 8
+//Updated 10-3-2022
 //By Shining, Jelly, IDGeek, Skewb
 
 state("sonic2app")
@@ -111,6 +111,7 @@ startup
 	vars.qsrEnabled = false;
 	//Settings
 	settings.Add("storyStart", false, "Only start timer when starting a story.");
+	settings.Add("NG+", false, "Start timer during opening cutscene for Last Story/NG+.", "storyStart");
 	settings.Add("huntingTimer", false, "Allow the use of v2.5 loadless if category is set improperly.");
 	settings.Add("timeIGT", false, "Use legacy IGT timing.");
 	settings.Add("combinedHunting", false, "Only add up hunting levels (Combined hunting).");
@@ -124,6 +125,7 @@ startup
 
 update
 {
+	//First time in a stage?
 	if (current.menuMode == 0 || current.menuMode == 1 || current.menuMode == 16)
 	{
 		vars.firstLoad = true;
@@ -323,7 +325,7 @@ start
 	else if (timer.Run.CategoryName == "Chao%")
 	{
 		if (current.mainMenu1 != 1 && current.mainMenu2 != 1 && current.stageSelect != 1 && 
-		((current.stageID == 90 && (current.menuMode == 1 && old.menuMode != 1)) || current.currMenu == 5) && (current.runStart && !old.runStart))
+		((current.stageID == 90 && (current.menuMode == 1 && old.menuMode != 1)) || current.currMenu == 5) && (current.runStart && old.runStart))
 		{
 			return true;
 		}
@@ -331,16 +333,31 @@ start
 	//2p Levels
 	else if (timer.Run.CategoryName == "2 Player Levels")
 	{
-		if (current.currMenu == 16 && (current.menuMode == 1 && old.menuMode != 1) && (current.runStart && !old.runStart))
+		if (current.currMenu == 16 && (current.menuMode == 1 && old.menuMode != 1) && (current.runStart && old.runStart))
 		{
 			return true;
 		}
 	}
 	//Normal
-	else if (current.mainMenu1 != 1 && current.mainMenu2 != 1 && current.stageSelect != 1 && (!settings["storyStart"] || current.currMenu == 5) && 
-	((current.menuMode == 1 && old.menuMode != 1) || (current.inCutscene && !old.inCutscene)) && current.runStart)
+	else if (current.mainMenu1 != 1 && current.mainMenu2 != 1 && current.stageSelect != 1 && ((current.menuMode == 1 && old.menuMode != 1) || 
+	(current.inCutscene && old.inCutscene)) && current.runStart)
 	{
-		return true;
+		if (settings["storyStart"] && !settings["NG+"])
+		{
+			if (current.currMenu == 5 && ((timer.Run.CategoryName == "Hero Story" && current.currEvent == 0) || (timer.Run.CategoryName == "Dark Story" && current.currEvent == 100)))
+			{
+				return true;
+			}
+		}
+		else if (settings["NG+"])
+		{
+			if (current.currMenu == 2 && (timer.Run.CategoryName == "Hero Story" && current.currEvent == 0) || (timer.Run.CategoryName == "Dark Story" && current.currEvent == 100) || 
+			(timer.Run.CategoryName == "Last Story" && current.currEvent == 200))
+			{
+				return true;
+			}
+		}
+		else return true;
 	}
 	//Start timer upon resetting a stage
 	else if (settings["resetIL"])
