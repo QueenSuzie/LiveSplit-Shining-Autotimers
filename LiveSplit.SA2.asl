@@ -1,4 +1,4 @@
-//Updated 10-3-2022
+//Updated 10-4-2022
 //By Shining, Jelly, IDGeek, Skewb
 
 state("sonic2app")
@@ -113,6 +113,7 @@ startup
 	settings.Add("storyStart", false, "Only start timer when starting a story.");
 	settings.Add("NG+", false, "Start timer during opening cutscene for Last Story/NG+.", "storyStart");
 	settings.Add("huntingTimer", false, "Allow the use of v2.5 loadless if category is set improperly.");
+	settings.Add("stageEntry", false, "Split upon entering a stage in stage select.");
 	settings.Add("timeIGT", false, "Use legacy IGT timing.");
 	settings.Add("combinedHunting", false, "Only add up hunting levels (Combined hunting).");
 	settings.Add("no280", false, "Don't count Route 280 as part of Rouge stages.", "combinedHunting");
@@ -276,17 +277,12 @@ update
 	{
 		vars.splitDelay = 1;
 	}
-	//180 Emblems
-	else if (timer.Run.CategoryName == "180 Emblems" && current.currEmblems == 180 && old.currEmblems != 180)
+	//Split on stage entry
+	else if (settings["stageEntry"] && current.mainMenu1 == 0 && current.mainMenu2 == 0 && current.currMenuState == 5 && (current.menuMode == 1 && old.menuMode != 1) && current.runStart)
 	{
 		vars.splitDelay = 1;
 	}
-	//171 Emblems
-	else if (timer.Run.CategoryName == "171 Emblems" && current.currEmblems == 171 && old.currEmblems != 171)
-	{
-		vars.splitDelay = 1;
-	}
-	//Normal stages
+	//Level End
 	else if (current.levelEnd && !old.levelEnd)
 	{
 		vars.splitDelay = 1;
@@ -325,7 +321,7 @@ start
 	else if (timer.Run.CategoryName == "Chao%")
 	{
 		if (current.mainMenu1 != 1 && current.mainMenu2 != 1 && current.stageSelect != 1 && 
-		((current.stageID == 90 && (current.menuMode == 1 && old.menuMode != 1)) || current.currMenu == 5) && (current.runStart && old.runStart))
+		((current.stageID == 90 && (current.menuMode == 1 && old.menuMode != 1)) || current.currMenu == 5) && current.runStart)
 		{
 			return true;
 		}
@@ -333,7 +329,7 @@ start
 	//2p Levels
 	else if (timer.Run.CategoryName == "2 Player Levels")
 	{
-		if (current.currMenu == 16 && (current.menuMode == 1 && old.menuMode != 1) && (current.runStart && old.runStart))
+		if (current.currMenu == 16 && (current.menuMode == 1 && old.menuMode != 1) && current.runStart)
 		{
 			return true;
 		}
