@@ -1,4 +1,4 @@
-//Updated 10-4-2022
+//Updated 10-6-2022
 //By Shining, Jelly, IDGeek, Skewb
 
 state("sonic2app")
@@ -240,7 +240,7 @@ update
 		vars.splitDelay = 1;
 	}
 	//Final boss
-	else if ((timer.Run.CategoryName == "Hero Story" || timer.Run.CategoryName == "Dark Story") && current.stageID == 42)
+	else if ((timer.Run.CategoryName == "Hero Story" || timer.Run.CategoryName == "Dark Story" || timer.Run.CategoryName == "Restricted Skips") && current.stageID == 42)
 	{
 		if (current.bossHealth == 0 && current.timerEnd && !old.timerEnd)
 		{
@@ -340,16 +340,30 @@ start
 	{
 		if (settings["storyStart"] && !settings["NG+"])
 		{
-			if (current.currMenu == 5 && ((timer.Run.CategoryName == "Hero Story" && current.currEvent == 0) || (timer.Run.CategoryName == "Dark Story" && current.currEvent == 100) ||
-			(timer.Run.CategoryName == "All Stories" && (current.currEvent == 0 || current.currEvent == 100))))
+			if (timer.Run.CategoryName == "Hero Story" || timer.Run.CategoryName == "Dark Story" || timer.Run.CategoryName == "All Stories")
+			{
+				if (current.currMenu == 5 && ((timer.Run.CategoryName == "Hero Story" && current.currEvent == 0) || (timer.Run.CategoryName == "Dark Story" && current.currEvent == 100) ||
+				(timer.Run.CategoryName == "All Stories" && (current.currEvent == 0 || current.currEvent == 100))))
+				{
+					return true;
+				}
+			}
+			else if (current.currMenu == 5)
 			{
 				return true;
 			}
 		}
 		else if (settings["NG+"])
 		{
-			if (current.currMenu == 2 && ((timer.Run.CategoryName == "Hero Story" && current.currEvent == 0) || (timer.Run.CategoryName == "Dark Story" && current.currEvent == 100) || 
-			(timer.Run.CategoryName == "Last Story" && current.currEvent == 200) || (timer.Run.CategoryName == "All Stories" && (current.currEvent == 0 || current.currEvent == 100))))
+			if (timer.Run.CategoryName == "Hero Story" || timer.Run.CategoryName == "Dark Story" || timer.Run.CategoryName == "Last Story" || timer.Run.CategoryName == "All Stories")
+			{
+				if (current.currMenu == 2 && ((timer.Run.CategoryName == "Hero Story" && current.currEvent == 0) || (timer.Run.CategoryName == "Dark Story" && current.currEvent == 100) || 
+				(timer.Run.CategoryName == "Last Story" && current.currEvent == 200) || (timer.Run.CategoryName == "All Stories" && (current.currEvent == 0 || current.currEvent == 100))))
+				{
+					return true;
+				}
+			}
+			else if (current.currMenu == 2)
 			{
 				return true;
 			}
