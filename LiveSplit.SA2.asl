@@ -1,4 +1,4 @@
-//Updated 10-8-2022
+//Updated 10-9-2022
 //By Shining, Jelly, IDGeek, Skewb
 
 state("sonic2app")
@@ -142,12 +142,13 @@ update
 	}
 	//Loading, saving, and cutscenes
 	else if (current.inCutscene || current.inEmblem || current.nowLoading || current.saveChao == 1 || 
-	current.menuMode == 1 || current.menuMode == 2 || current.menuMode == 3 || (!current.levelEnd && vars.firstLoad && current.menuMode == 7) || 
+	(!current.controlActive && (current.menuMode == 1 || current.menuMode == 2 || current.menuMode == 3 || 
+	(!current.levelEnd && vars.firstLoad && current.menuMode == 7)) || current.menuMode == 8 || current.menuMode == 12) || 
 	((current.levelEnd && old.levelEnd) && (current.ringSaving == 4 || old.ringSaving == 4)) || (current.mainMenu1 == 1 && current.currMenu == 24 && current.currMenuState == 13) || 
 	(current.mainMenu1 == 0 && current.stageSelect == 0 && current.storyRecap == 0 && current.twoplayerMenu == 0 && current.currMenuState != 2 && !settings["huntingTimer"] && 
 	timer.Run.GameName != "Sonic Adventure 2: Hunting Redux" && timer.Run.CategoryName != "Knuckles Centurion" && timer.Run.CategoryName != "Knuckles stages x20" && 
-	timer.Run.CategoryName != "Rouge Centurion" && timer.Run.CategoryName != "Rouge stages x25" && ((current.menuMode == 7) || (current.stageID != 66 && current.stageID != 65 && current.inlevelCutscene == 14) || 
-	(current.gameplayPause == 117 || current.gameplayPause == 123) && (current.levelTimer == old.levelTimer))))
+	timer.Run.CategoryName != "Rouge Centurion" && timer.Run.CategoryName != "Rouge stages x25" && ((current.menuMode == 7 && !current.controlActive) || 
+	(current.stageID != 66 && current.stageID != 65 && current.inlevelCutscene == 14) || (current.gameplayPause == 117 || current.gameplayPause == 123) && (current.levelTimer == old.levelTimer))))
 	{
 		vars.countFrames = false;
 	}
