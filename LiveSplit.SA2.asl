@@ -1,54 +1,6 @@
-//Updated 10-9-2022
+//Updated 10-10-2022
 //By Shining, Jelly, IDGeek, Skewb
-
 state("sonic2app")
-{
-	bool timerEnd         : 0x0134AFDA;
-	bool runStart         : 0x0134AFFA;
-	bool controlActive    : 0x0134AFFE;
-	bool levelEnd         : 0x0134B002;
-	bool inCutscene       : 0x015420F8;
-	bool nowLoading       : 0x016557E4;
-	bool inAMV            : 0x016EDE28;
-	bool inEmblem         : 0x01919BE0;
-	
-	byte bossRush         : 0x00877DC4;
-	byte timestop         : 0x0134AFF7;
-	byte ringSaving       : 0x015455DC;
-	byte stageID          : 0x01534B70;
-	byte charID           : 0x01534B80;
-	byte menuMode         : 0x01534BE0;
-	byte timesRestarted   : 0x01534BE8;
-	byte saveChao         : 0x015F645C;
-	byte chaoID           : 0x0165A2CC;
-	byte textCutscene     : 0x016EFD44;
-	byte raceChao         : 0x019D2784;
-	byte twoplayerMenu    : 0x0191B88C;
-	byte mainMenu1        : 0x0191BD2C;
-	byte mainMenu2        : 0x0197BAE0;
-	byte stageSelect      : 0x0191BEAC;
-	byte storyRecap       : 0x0191C1AC;
-	byte inlevelCutscene  : 0x019D0F9C;
-	byte gameplayPause    : 0x021F0014;
-
-	short currEmblems     : 0x01536296;
-	short currEvent       : 0x01628AF4;
-	//Timing
-	int levelTimer        : 0x015457F8;
-	int levelTimerClone   : 0x0134AFDB;
-	int levelTimer        : 0x015457F8;
-	int frameCount        : 0x0134B038;
-
-	float bossHealth      : 0x019E9604, 0x48;
-	
-	int currMenu          : 0x0197BB10;
-	int currMenuState     : 0x0197BB14;
-	//Quick Save Reload
-	int qsrPointer        : 0x00054884;
-	int qsrReloadCount    : 0x00054884, 0x0;
-}
-
-state("Launcher")
 {
 	bool timerEnd         : 0x0134AFDA;
 	bool runStart         : 0x0134AFFA;
@@ -97,11 +49,11 @@ state("Launcher")
 
 init
 {
+	refreshRate = 60;
 }
 
 startup
 {
-	refreshRate = 120;
 	//Variables
 	vars.lastGoodTimerVal = Int32.MaxValue;
 	vars.totalTime = 0;     //Time accumulated from level timer, in centiseconds
@@ -110,15 +62,16 @@ startup
 	vars.firstLoad = true;
 	vars.qsrEnabled = false;
 	//Settings
+	settings.Add("fileReset", true, "Restart timer when deleting a file.");
 	settings.Add("storyStart", false, "Only start timer when starting a story.");
 	settings.Add("NG+", false, "Start timer during opening cutscene for Last Story/NG+.", "storyStart");
-	settings.Add("huntingTimer", false, "Allow the use of v2.5 loadless if category is set improperly.");
-	settings.Add("stageEntry", false, "Split upon entering a stage in stage select.");
+	settings.Add("huntingTimer", false, "Allow the use of loadless if category is set improperly.");
 	settings.Add("timeIGT", false, "Use legacy IGT timing.");
 	settings.Add("combinedHunting", false, "Only add up hunting levels (Combined hunting).");
 	settings.Add("no280", false, "Don't count Route 280 as part of Rouge stages.", "combinedHunting");
 	settings.Add("stageExit", false, "Restart timer upon manually exiting a stage in stage select.");
 	settings.Add("resetIL", false, "Restart timer upon restart/death (Only activate for ILs).");
+	settings.Add("stageEntry", false, "Split upon entering a stage in stage select.");
 	settings.Add("cannonsCore", false, "Only split in Cannon's Core when a mission is completed.");
 	settings.Add("bossRush", false, "Only split in Boss Rush when defeating the last boss of a story.");
 	settings.Add("chaoRace", false, "Split when exiting a Chao Race.");
@@ -384,12 +337,15 @@ start
 reset
 {
 	//Reset if a file is created or deleted
-	if ((current.currMenu == 9 || current.currMenu == 24) && (current.currMenuState == 12 || current.currMenuState == 15))
+	if (settings["fileReset"])
 	{
-		return true;
+		if ((current.currMenu == 9 || current.currMenu == 24) && (current.currMenuState == 12 || current.currMenuState == 15))
+		{
+			return true;
+		}
 	}
 	//Reset if manually exiting a stage during stage select
-	else if (settings["stageExit"])
+	if (settings["stageExit"])
 	{
 		if (current.menuMode == 0 && current.stageSelect == 1 && old.stageSelect != 1 && !current.timerEnd)
 		{
@@ -397,7 +353,7 @@ reset
 		}
 	}
 	//Reset if leaving a stage
-	else if (settings["resetIL"])
+	if (settings["resetIL"])
 	{
 		if (!current.levelEnd && !current.controlActive && old.controlActive && current.timerEnd)
 		{
@@ -405,7 +361,7 @@ reset
 		}
 	}
 	//Reset upon activating quick save reload
-	else if (vars.qsrEnabled = true)
+	if (vars.qsrEnabled = true)
 	{
 		if ((current.qsrReloadCount != 0 && old.qsrReloadCount != -1) && (old.qsrReloadCount != current.qsrReloadCount))
 		{
