@@ -1,4 +1,4 @@
-//Updated 10-10-2022
+//Updated 10-10-2022, Ver. Final
 //By Shining, Jelly, IDGeek, Skewb
 state("sonic2app")
 {
@@ -62,19 +62,19 @@ startup
 	vars.firstLoad = true;
 	vars.qsrEnabled = false;
 	//Settings
-	settings.Add("fileReset", true, "Restart timer when deleting a file.");
 	settings.Add("storyStart", false, "Only start timer when starting a story.");
-	settings.Add("NG+", false, "Start timer during opening cutscene for Last Story/NG+.", "storyStart");
+	settings.Add("NG+", false, "Start timer when selecting first stage of a completed story (NG+).", "storyStart");
 	settings.Add("huntingTimer", false, "Allow the use of loadless if category is set improperly.");
 	settings.Add("timeIGT", false, "Use legacy IGT timing.");
 	settings.Add("combinedHunting", false, "Only add up hunting levels (Combined hunting).");
 	settings.Add("no280", false, "Don't count Route 280 as part of Rouge stages.", "combinedHunting");
-	settings.Add("stageExit", false, "Restart timer upon manually exiting a stage in stage select.");
-	settings.Add("resetIL", false, "Restart timer upon restart/death (Only activate for ILs).");
-	settings.Add("stageEntry", false, "Split upon entering a stage in stage select.");
+	settings.Add("fileReset", true, "Restart timer when deleting a file/activating QSR mod.");
+	settings.Add("stageExit", false, "Restart timer when manually exiting a stage in stage select.");
+	settings.Add("resetIL", false, "Restart timer on restart/death (For use with ILs).");
+	settings.Add("stageEntry", false, "Split when entering a stage in stage select.");
+	settings.Add("chaoRace", false, "Split when exiting Chao Race.");
 	settings.Add("cannonsCore", false, "Only split in Cannon's Core when a mission is completed.");
 	settings.Add("bossRush", false, "Only split in Boss Rush when defeating the last boss of a story.");
-	settings.Add("chaoRace", false, "Split when exiting a Chao Race.");
 }
 
 update
@@ -343,6 +343,14 @@ reset
 		{
 			return true;
 		}
+		//Reset upon activating quick save reload
+		else if (vars.qsrEnabled = true)
+		{
+			if ((current.qsrReloadCount != 0 && old.qsrReloadCount != -1) && (old.qsrReloadCount != current.qsrReloadCount))
+			{
+				return true;
+			}
+		}
 	}
 	//Reset if manually exiting a stage during stage select
 	if (settings["stageExit"])
@@ -356,14 +364,6 @@ reset
 	if (settings["resetIL"])
 	{
 		if (!current.levelEnd && !current.controlActive && old.controlActive && current.timerEnd)
-		{
-			return true;
-		}
-	}
-	//Reset upon activating quick save reload
-	if (vars.qsrEnabled = true)
-	{
-		if ((current.qsrReloadCount != 0 && old.qsrReloadCount != -1) && (old.qsrReloadCount != current.qsrReloadCount))
 		{
 			return true;
 		}
