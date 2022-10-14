@@ -1,4 +1,4 @@
-//Updated 10-10-2022, Ver. Final
+//Updated 10-14-2022, Ver. Final
 //By Shining, Jelly, IDGeek, Skewb
 state("sonic2app")
 {
@@ -49,11 +49,11 @@ state("sonic2app")
 
 init
 {
-	refreshRate = 60;
 }
 
 startup
 {
+	refreshRate = 120;
 	//Variables
 	vars.lastGoodTimerVal = Int32.MaxValue;
 	vars.totalTime = 0;     //Time accumulated from level timer, in centiseconds
