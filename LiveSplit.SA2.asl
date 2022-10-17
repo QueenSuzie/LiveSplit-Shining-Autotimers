@@ -1,4 +1,4 @@
-//Updated 10-14-2022, Ver. Final
+//Updated 10-16-2022, Ver. Final?
 //By Shining, Jelly, IDGeek, Skewb
 state("sonic2app")
 {
@@ -49,6 +49,7 @@ state("sonic2app")
 
 init
 {
+	refreshRate = 120;
 }
 
 startup
@@ -283,7 +284,7 @@ start
 	//2p Levels
 	else if (timer.Run.CategoryName == "2 Player Levels")
 	{
-		if (current.currMenu == 16 && (current.menuMode == 1 && old.menuMode != 1) && current.runStart)
+		if (current.mainMenu1 != 1 && current.mainMenu2 != 1 && current.stageSelect != 1 && current.currMenuState == 11 && (current.runStart && !old.runStart))
 		{
 			return true;
 		}
@@ -325,7 +326,7 @@ start
 		else return true;
 	}
 	//Start timer upon resetting a stage
-	else if (settings["resetIL"])
+	if (settings["resetIL"])
 	{
 		if (!current.levelEnd && !current.controlActive && old.controlActive && current.timerEnd)
 		{
