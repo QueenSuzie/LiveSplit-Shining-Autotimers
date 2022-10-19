@@ -1,4 +1,4 @@
-//Updated 10-16-2022, Ver. Final?
+//Updated 10-19-2022, Ver. Final?
 //By Shining, Jelly, IDGeek, Skewb
 state("sonic2app")
 {
@@ -194,14 +194,6 @@ update
 	{
 		vars.splitDelay = 0;
 	}
-	//Final boss
-	else if ((timer.Run.CategoryName == "Hero Story" || timer.Run.CategoryName == "Dark Story" || timer.Run.CategoryName == "Restricted Skips") && current.stageID == 42)
-	{
-		if (current.bossHealth == 0 && current.timerEnd && !old.timerEnd)
-		{
-			vars.splitDelay = 1;
-		}
-	}
 	//Boss stages
 	else if ((current.stageID == 42 || current.stageID == 33 || current.stageID == 29 || current.stageID == 20 || current.stageID == 19) && current.bossHealth == 0)
 	{
@@ -218,6 +210,11 @@ update
 			vars.splitDelay = 3;
 		}
 	}
+	//Level End
+	else if ((current.stageID != 71 || current.stageID != 70) && current.levelEnd && !old.levelEnd)
+	{
+		vars.splitDelay = 1;
+	}
 	//Kart stages
 	else if (current.stageID == 71 || current.stageID == 70)
 	{
@@ -227,20 +224,14 @@ update
 		}
 	}
 	//Chao World
-	else if ((settings["chaoRace"] && current.stageID == 90 && current.raceChao != 1 && old.raceChao == 1) || 
-	(current.stageID == 90 && current.chaoID == 1 && current.inEmblem && !old.inEmblem))
+	else if ((settings["chaoRace"] && current.stageID == 90 && current.raceChao != 1 && old.raceChao == 1) || (current.stageID == 90 && current.chaoID == 1 && current.inEmblem && !old.inEmblem))
 	{
-		vars.splitDelay = 1;
+		vars.splitDelay = 3;
 	}
 	//Split on stage entry
 	else if (settings["stageEntry"] && current.mainMenu1 == 0 && current.mainMenu2 == 0 && current.currMenuState == 5 && (current.menuMode == 1 && old.menuMode != 1) && current.runStart)
 	{
-		vars.splitDelay = 1;
-	}
-	//Level End
-	else if (current.levelEnd && !old.levelEnd)
-	{
-		vars.splitDelay = 1;
+		vars.splitDelay = 3;
 	}
 }
 
