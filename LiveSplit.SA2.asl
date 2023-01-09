@@ -1,4 +1,4 @@
-//Updated 10-19-2022, Ver. Final?
+//Updated 01-09-2023, Ver. Final?
 //By Shining, Jelly, IDGeek, Skewb
 state("sonic2app")
 {
