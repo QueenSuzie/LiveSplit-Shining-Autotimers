@@ -1,4 +1,4 @@
-//Updated 01-09-2023, Ver. Final?
+//Updated 01-09-2023
 //By Shining, Jelly, IDGeek, Skewb
 state("sonic2app")
 {
@@ -117,7 +117,7 @@ update
 	{
 		vars.countFrames = true;
 	}
-	else if (current.mainMenu1 == 0 && current.stageSelect == 0 && current.storyRecap == 0 && current.twoplayerMenu == 0 && current.currMenuState != 3 && 
+	else if (current.mainMenu1 == 0 && current.mainMenu2 == 0 && current.stageSelect == 0 && current.storyRecap == 0 && current.twoplayerMenu == 0 && current.currMenu != 23 && current.currMenuState != 3 && 
 	((current.menuMode == 16 && current.controlActive && !current.levelEnd && !current.timerEnd && current.timestop != 2) || 
 	(!settings["huntingTimer"] && timer.Run.GameName != "Sonic Adventure 2: Hunting Redux" && timer.Run.CategoryName != "Knuckles Centurion" && timer.Run.CategoryName != "Knuckles stages x20" && 
 	timer.Run.CategoryName != "Rouge Centurion" && timer.Run.CategoryName != "Rouge stages x25" && (current.levelEnd || (current.menuMode == 0 && !current.levelEnd) || (current.stageID == 90 && !current.controlActive && 
@@ -205,7 +205,7 @@ update
 	//Cannon's Core
 	else if (settings["cannonsCore"] && (current.stageID == 38 || current.stageID == 37 || current.stageID == 36 || current.stageID == 35))
 	{
-		if (current.controlActive && current.levelEnd && !old.levelEnd)
+		if (current.controlActive && current.menuMode != 8 && current.levelEnd && !old.levelEnd)
 		{
 			vars.splitDelay = 3;
 		}
