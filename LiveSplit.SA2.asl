@@ -1,4 +1,4 @@
-//Updated 02-01-2023
+//Updated 04-28-2023
 //By Shining, Jelly, IDGeek, Skewb
 state("sonic2app")
 {
@@ -114,7 +114,7 @@ update
 	}
 	//Normal stages
 	else if (!settings["timeIGT"] && !settings["combinedHunting"] && current.mainMenu2 == 1 && 
-	((current.currMenuState == 2 && !current.runStart) || current.currMenuState == 4 || current.currMenuState == 5 || current.currMenuState == 6 || current.currMenuState == 7))
+	(((current.currMenuState == 2 || current.currMenuState == 3) && !current.runStart) || current.currMenuState == 4 || current.currMenuState == 5 || current.currMenuState == 6 || current.currMenuState == 7))
 	{
 		vars.countFrames = true;
 	}
