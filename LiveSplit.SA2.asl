@@ -1,4 +1,4 @@
-//Updated 04-30-2023
+//Updated 03-07-2025
 //By Shining, Jelly, IDGeek, Skewb
 state("sonic2app")
 {
@@ -10,8 +10,9 @@ state("sonic2app")
 	bool nowLoading       : 0x016557E4;
 	bool inAMV            : 0x016EDE28;
 	bool inEmblem         : 0x01919BE0;
-	
+
 	byte bossRush         : 0x00877DC4;
+	byte missionNum       : 0x0134AFE3;
 	byte timestop         : 0x0134AFF7;
 	byte ringSaving       : 0x015455DC;
 	byte stageID          : 0x01534B70;
@@ -39,7 +40,7 @@ state("sonic2app")
 	int frameCount        : 0x0134B038;
 
 	float bossHealth      : 0x019E9604, 0x48;
-	
+
 	int currMenu          : 0x0197BB10;
 	int currMenuState     : 0x0197BB14;
 	//Quick Save Reload
@@ -74,6 +75,7 @@ startup
 	settings.Add("resetIL", false, "Restart timer on restart/death (For use with ILs).");
 	settings.Add("stageEntry", false, "Split when entering a stage in stage select.");
 	settings.Add("chaoRace", false, "Split when exiting Chao Race.");
+	settings.Add("backRing", false, "Split when touching an M2/M3 Go Back Ring.");
 	settings.Add("cannonsCore", false, "Only split in Cannon's Core when a mission is completed.");
 	settings.Add("bossRush", false, "Only split in Boss Rush when defeating the last boss of a story.");
 }
@@ -95,33 +97,33 @@ update
 		vars.countFrames = false;
 	}
 	//Loading, saving, and cutscenes
-	else if (current.inCutscene || current.inEmblem || current.nowLoading || current.saveChao == 1 || (!current.controlActive && (current.menuMode == 1 || current.menuMode == 2 || current.menuMode == 3 || 
-	(!current.levelEnd && vars.firstLoad && current.menuMode == 7)) || (!current.levelEnd && (current.menuMode == 8 || current.menuMode == 12))) || 
-	((current.levelEnd && old.levelEnd) && (current.ringSaving == 4 || old.ringSaving == 4)) || (current.mainMenu1 == 1 && current.currMenu == 24 && current.currMenuState == 13) || 
-	(current.mainMenu1 == 0 && current.stageSelect == 0 && current.storyRecap == 0 && current.twoplayerMenu == 0 && current.currMenuState != 2 && !settings["huntingTimer"] && 
-	timer.Run.GameName != "Sonic Adventure 2: Hunting Redux" && timer.Run.CategoryName != "Knuckles Centurion" && timer.Run.CategoryName != "Knuckles stages x20" && 
-	timer.Run.CategoryName != "Rouge Centurion" && timer.Run.CategoryName != "Rouge stages x25" && ((current.menuMode == 7 && !current.controlActive) || 
+	else if (current.inCutscene || current.inEmblem || current.nowLoading || current.saveChao == 1 || (!current.controlActive && (current.menuMode == 1 || current.menuMode == 2 || current.menuMode == 3 ||
+	(!current.levelEnd && vars.firstLoad && current.menuMode == 7)) || (!current.levelEnd && (current.menuMode == 8 || current.menuMode == 12))) ||
+	((current.levelEnd && old.levelEnd) && (current.ringSaving == 4 || old.ringSaving == 4)) || (current.mainMenu1 == 1 && current.currMenu == 24 && current.currMenuState == 13) ||
+	(current.mainMenu1 == 0 && current.stageSelect == 0 && current.storyRecap == 0 && current.twoplayerMenu == 0 && current.currMenuState != 2 && !settings["huntingTimer"] &&
+	timer.Run.GameName != "Sonic Adventure 2: Hunting Redux" && timer.Run.CategoryName != "Knuckles Centurion" && timer.Run.CategoryName != "Knuckles stages x20" &&
+	timer.Run.CategoryName != "Rouge Centurion" && timer.Run.CategoryName != "Rouge stages x25" && ((current.menuMode == 7 && !current.controlActive) ||
 	(current.mainMenu2 == 0 && current.stageID != 66 && current.stageID != 65 && current.inlevelCutscene == 14) || (current.gameplayPause == 117 || current.gameplayPause == 123) && (current.levelTimer == old.levelTimer))))
 	{
 		vars.countFrames = false;
 	}
 	//Credits
-	else if (current.mainMenu1 == 0 && current.mainMenu2 == 0 && current.stageSelect == 0 && current.storyRecap == 0 && current.twoplayerMenu == 0 && current.stageID == 0 && 
+	else if (current.mainMenu1 == 0 && current.mainMenu2 == 0 && current.stageSelect == 0 && current.storyRecap == 0 && current.twoplayerMenu == 0 && current.stageID == 0 &&
 	(current.currEvent == 211 || current.currEvent == 210 || current.currEvent == 208 || current.currEvent == 131 || current.currEvent == 28))
 	{
 		vars.countFrames = false;
 	}
 	//Normal stages
-	else if (!settings["timeIGT"] && !settings["combinedHunting"] && current.mainMenu2 == 1 && 
+	else if (!settings["timeIGT"] && !settings["combinedHunting"] && current.mainMenu2 == 1 &&
 	(((current.currMenuState == 2 || current.currMenuState == 3) && !current.runStart) || current.currMenuState == 4 || current.currMenuState == 5 || current.currMenuState == 6 || current.currMenuState == 7))
 	{
 		vars.countFrames = true;
 	}
-	else if (current.mainMenu1 == 0 && current.stageSelect == 0 && current.storyRecap == 0 && current.twoplayerMenu == 0 && current.currMenuState != 3 && 
-	((current.menuMode == 16 && current.controlActive && !current.levelEnd && !current.timerEnd && current.timestop != 2) || 
-	(!settings["huntingTimer"] && timer.Run.GameName != "Sonic Adventure 2: Hunting Redux" && timer.Run.CategoryName != "Knuckles Centurion" && timer.Run.CategoryName != "Knuckles stages x20" && 
-	timer.Run.CategoryName != "Rouge Centurion" && timer.Run.CategoryName != "Rouge stages x25" && (current.levelEnd || (current.menuMode == 0 && !current.levelEnd) || (current.stageID == 90 && !current.controlActive && 
-	(current.menuMode == 29 || old.menuMode == 29 || current.menuMode == 12 || old.menuMode == 12 || current.menuMode == 8 || old.menuMode == 8 || current.menuMode == 7 || old.menuMode == 7)) ||  
+	else if (current.mainMenu1 == 0 && current.stageSelect == 0 && current.storyRecap == 0 && current.twoplayerMenu == 0 && current.currMenuState != 3 &&
+	((current.menuMode == 16 && current.controlActive && !current.levelEnd && !current.timerEnd && current.timestop != 2) ||
+	(!settings["huntingTimer"] && timer.Run.GameName != "Sonic Adventure 2: Hunting Redux" && timer.Run.CategoryName != "Knuckles Centurion" && timer.Run.CategoryName != "Knuckles stages x20" &&
+	timer.Run.CategoryName != "Rouge Centurion" && timer.Run.CategoryName != "Rouge stages x25" && (current.levelEnd || (current.menuMode == 0 && !current.levelEnd) || (current.stageID == 90 && !current.controlActive &&
+	(current.menuMode == 29 || old.menuMode == 29 || current.menuMode == 12 || old.menuMode == 12 || current.menuMode == 8 || old.menuMode == 8 || current.menuMode == 7 || old.menuMode == 7)) ||
 	(current.stageID != 90 && current.menuMode != 0 && current.timerEnd)))))
 	{
 		vars.countFrames = false;
@@ -134,7 +136,7 @@ update
 		}
 		else if (settings["combinedHunting"])
 		{
-			if (current.stageID == 5 || current.stageID == 7 || current.stageID == 8 || current.stageID == 16 || current.stageID == 18 || current.stageID == 25 || 
+			if (current.stageID == 5 || current.stageID == 7 || current.stageID == 8 || current.stageID == 16 || current.stageID == 18 || current.stageID == 25 ||
 			current.stageID == 26 || current.stageID == 32 || current.stageID == 44 || (!settings["no280"] && current.stageID == 70 && current.charID == 5))
 			{
 				vars.countFrames = true;
@@ -147,7 +149,7 @@ update
 		vars.countFrames = true;
 	}
 	else vars.countFrames = false;
-	
+
 	if (vars.countFrames)
 	{
 		int timeToAdd = Math.Max(0, current.frameCount - old.frameCount);
@@ -171,10 +173,10 @@ update
 		int oldGameTime =  (oldMinutes*6000) +  (oldSeconds*100) +  (oldCentis);
 		//Only add positive time
 		int timeToAdd = Math.Max(0, inGameTime-oldGameTime);
-		
+
 		if (current.controlActive)
 		{
-			if (settings["combinedHunting"] && (current.stageID == 5 || current.stageID == 7 || current.stageID == 8 || current.stageID == 16 || current.stageID == 18 || current.stageID == 25 || 
+			if (settings["combinedHunting"] && (current.stageID == 5 || current.stageID == 7 || current.stageID == 8 || current.stageID == 16 || current.stageID == 18 || current.stageID == 25 ||
 			current.stageID == 26 || current.stageID == 32 || current.stageID == 44 || (!settings["no280"] && current.stageID == 70 && current.charID == 5)))
 			{
 				vars.totalTime += timeToAdd;
@@ -189,7 +191,7 @@ update
 	//Splitting
 	vars.splitDelay = Math.Max(0, vars.splitDelay-1);
 	//Boss rush
-	if (settings["bossRush"] && current.bossRush == 1 && (current.stageID == 67 || current.stageID == 65 || current.stageID == 64 || current.stageID == 63 || current.stageID == 62 || 
+	if (settings["bossRush"] && current.bossRush == 1 && (current.stageID == 67 || current.stageID == 65 || current.stageID == 64 || current.stageID == 63 || current.stageID == 62 ||
 	current.stageID == 61 || current.stageID == 60 || current.stageID == 33 || current.stageID == 29 || current.stageID == 20 || current.stageID == 19))
 	{
 		vars.splitDelay = 0;
@@ -211,7 +213,7 @@ update
 		}
 	}
 	//Level End
-	else if ((current.stageID != 71 || current.stageID != 70) && current.levelEnd && !old.levelEnd)
+	else if (current.stageID != 71 && current.stageID != 70 && current.levelEnd && !old.levelEnd)
 	{
 		vars.splitDelay = 1;
 	}
@@ -233,6 +235,11 @@ update
 	{
 		vars.splitDelay = 3;
 	}
+	//Split on go back ring
+	else if (settings["backRing"] && (current.missionNum == 1 || current.missionNum == 2) && current.stageID != 70 && current.stageID != 71 && current.menuMode == 15 && old.menuMode != 15)
+	{
+		vars.splitDelay = 1;
+	}
 }
 
 start
@@ -249,8 +256,8 @@ start
 	}
 	else vars.qsrEnabled = false;
 	//Allow Any% and 2 Player Levels to start where other categories can't
-	if ((timer.Run.CategoryName != "Any%" && timer.Run.CategoryName != "2 Player Levels" && 
-	current.currMenuState != 4 && current.currMenuState != 5 && current.currMenuState != 7) || 
+	if ((timer.Run.CategoryName != "Any%" && timer.Run.CategoryName != "2 Player Levels" &&
+	current.currMenuState != 4 && current.currMenuState != 5 && current.currMenuState != 7) ||
 	current.inEmblem || current.inAMV)
 	{
 		return false;
@@ -266,7 +273,7 @@ start
 	//Only start timer when starting a story or selecting chao garden
 	else if (timer.Run.CategoryName == "Chao%")
 	{
-		if (current.mainMenu1 != 1 && current.mainMenu2 != 1 && current.stageSelect != 1 && 
+		if (current.mainMenu1 != 1 && current.mainMenu2 != 1 && current.stageSelect != 1 &&
 		((current.stageID == 90 && (current.menuMode == 1 && old.menuMode != 1)) || current.currMenu == 5) && current.runStart)
 		{
 			return true;
@@ -281,7 +288,7 @@ start
 		}
 	}
 	//Normal
-	else if (current.mainMenu1 != 1 && current.mainMenu2 != 1 && current.stageSelect != 1 && ((current.menuMode == 1 && old.menuMode != 1) || 
+	else if (current.mainMenu1 != 1 && current.mainMenu2 != 1 && current.stageSelect != 1 && ((current.menuMode == 1 && old.menuMode != 1) ||
 	(current.inCutscene && old.inCutscene)) && current.runStart)
 	{
 		if (settings["storyStart"] && !settings["NG+"])
@@ -303,7 +310,7 @@ start
 		{
 			if (timer.Run.CategoryName == "Hero Story" || timer.Run.CategoryName == "Dark Story" || timer.Run.CategoryName == "Last Story" || timer.Run.CategoryName == "All Stories")
 			{
-				if (current.currMenu == 2 && ((timer.Run.CategoryName == "Hero Story" && current.currEvent == 0) || (timer.Run.CategoryName == "Dark Story" && current.currEvent == 100) || 
+				if (current.currMenu == 2 && ((timer.Run.CategoryName == "Hero Story" && current.currEvent == 0) || (timer.Run.CategoryName == "Dark Story" && current.currEvent == 100) ||
 				(timer.Run.CategoryName == "Last Story" && current.currEvent == 200) || (timer.Run.CategoryName == "All Stories" && (current.currEvent == 0 || current.currEvent == 100))))
 				{
 					return true;
